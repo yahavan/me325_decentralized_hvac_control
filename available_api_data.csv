@@ -1,0 +1,1104 @@
+**ACTUATORS**
+Actuator,Schedule:Compact,Schedule Value,OFFICE OCCUPANCY,[ ]
+Actuator,Schedule:Compact,Schedule Value,OFFICE LIGHTING,[ ]
+Actuator,Schedule:Compact,Schedule Value,OFFICE EQUIPMENT,[ ]
+Actuator,Schedule:Constant,Schedule Value,ALWAYS ON,[ ]
+Actuator,Schedule:Constant,Schedule Value,ACTIVITY LEVEL,[ ]
+Actuator,Schedule:Constant,Schedule Value,HEATING SP SCHED,[ ]
+Actuator,Schedule:Constant,Schedule Value,CONTROL TYPE SCHED,[ ]
+Actuator,Schedule:Constant,Schedule Value,OUTDOOR CO2 SCHEDULE,[ ]
+Actuator,Schedule:Constant,Schedule Value,SAT SETPOINT SCHEDULE,[ ]
+Actuator,Schedule:Constant,Schedule Value,SERVER EQUIPMENT SCHED,[ ]
+Actuator,Schedule:Constant,Schedule Value,ZONE 1 COOLING SP SCHED,[ ]
+Actuator,Schedule:Constant,Schedule Value,ZONE 2 COOLING SP SCHED,[ ]
+Actuator,Schedule:Constant,Schedule Value,ZONE 3 COOLING SP SCHED,[ ]
+Actuator,Schedule:Constant,Schedule Value,ZONE 4 COOLING SP SCHED,[ ]
+Actuator,Schedule:Constant,Schedule Value,ZONE 5 COOLING SP SCHED,[ ]
+Actuator,Weather Data,Outdoor Dry Bulb,Environment,[C]
+Actuator,Weather Data,Outdoor Dew Point,Environment,[C]
+Actuator,Weather Data,Outdoor Relative Humidity,Environment,[%]
+Actuator,Weather Data,Diffuse Solar,Environment,[W/m2]
+Actuator,Weather Data,Direct Solar,Environment,[W/m2]
+Actuator,Weather Data,Wind Speed,Environment,[m/s]
+Actuator,Weather Data,Wind Direction,Environment,[deg]
+Actuator,Material,Surface Property Solar Absorptance,M_Stucco,[ ]
+Actuator,Material,Surface Property Thermal Absorptance,M_Stucco,[ ]
+Actuator,Material,Surface Property Visible Absorptance,M_Stucco,[ ]
+Actuator,Material,Surface Property Solar Absorptance,M_Concrete200,[ ]
+Actuator,Material,Surface Property Thermal Absorptance,M_Concrete200,[ ]
+Actuator,Material,Surface Property Visible Absorptance,M_Concrete200,[ ]
+Actuator,Material,Surface Property Solar Absorptance,M_Insulation,[ ]
+Actuator,Material,Surface Property Thermal Absorptance,M_Insulation,[ ]
+Actuator,Material,Surface Property Visible Absorptance,M_Insulation,[ ]
+Actuator,Material,Surface Property Solar Absorptance,M_Gypsum,[ ]
+Actuator,Material,Surface Property Thermal Absorptance,M_Gypsum,[ ]
+Actuator,Material,Surface Property Visible Absorptance,M_Gypsum,[ ]
+Actuator,Material,Surface Property Solar Absorptance,M_RoofMembrane,[ ]
+Actuator,Material,Surface Property Thermal Absorptance,M_RoofMembrane,[ ]
+Actuator,Material,Surface Property Visible Absorptance,M_RoofMembrane,[ ]
+Actuator,Material,Surface Property Solar Absorptance,M_RoofInsulation,[ ]
+Actuator,Material,Surface Property Thermal Absorptance,M_RoofInsulation,[ ]
+Actuator,Material,Surface Property Visible Absorptance,M_RoofInsulation,[ ]
+Actuator,Material,Surface Property Solar Absorptance,M_FloorSlab,[ ]
+Actuator,Material,Surface Property Thermal Absorptance,M_FloorSlab,[ ]
+Actuator,Material,Surface Property Visible Absorptance,M_FloorSlab,[ ]
+Actuator,People,Number of People,ZONE 1 PEOPLE,[each]
+Actuator,People,Number of People,ZONE 2 PEOPLE,[each]
+Actuator,People,Number of People,ZONE 3 PEOPLE,[each]
+Actuator,People,Number of People,ZONE 4 PEOPLE,[each]
+Actuator,People,Number of People,ZONE 5 PEOPLE,[each]
+Actuator,Lights,Electricity Rate,ZONE 1 LIGHTS,[W]
+Actuator,Lights,Electricity Rate,ZONE 2 LIGHTS,[W]
+Actuator,Lights,Electricity Rate,ZONE 3 LIGHTS,[W]
+Actuator,Lights,Electricity Rate,ZONE 4 LIGHTS,[W]
+Actuator,Lights,Electricity Rate,ZONE 5 LIGHTS,[W]
+Actuator,ElectricEquipment,Electricity Rate,ZONE 1 EQUIPMENT,[W]
+Actuator,ElectricEquipment,Electricity Rate,ZONE 2 EQUIPMENT,[W]
+Actuator,ElectricEquipment,Electricity Rate,ZONE 3 EQUIPMENT,[W]
+Actuator,ElectricEquipment,Electricity Rate,ZONE 4 EQUIPMENT,[W]
+Actuator,ElectricEquipment,Electricity Rate,ZONE 5 EQUIPMENT,[W]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 1 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 1 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 1 WALL NORTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 1 WALL NORTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 1 WALL WEST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 1 WALL WEST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 1 WALL EAST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 1 WALL EAST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 1 FLOOR,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 1 FLOOR,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 1 ROOF,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 1 ROOF,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 1 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 1 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 2 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 2 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 2 WALL NORTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 2 WALL NORTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 2 WALL WEST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 2 WALL WEST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 2 WALL EAST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 2 WALL EAST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 2 FLOOR,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 2 FLOOR,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 2 ROOF,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 2 ROOF,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 2 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 2 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 3 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 3 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 3 WALL NORTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 3 WALL NORTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 3 WALL WEST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 3 WALL WEST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 3 WALL EAST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 3 WALL EAST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 3 FLOOR,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 3 FLOOR,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 3 ROOF,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 3 ROOF,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 3 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 3 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 4 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 4 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 4 WALL NORTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 4 WALL NORTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 4 WALL WEST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 4 WALL WEST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 4 WALL EAST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 4 WALL EAST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 4 FLOOR,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 4 FLOOR,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 4 ROOF,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 4 ROOF,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 4 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 4 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 5 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 5 WALL SOUTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 5 WALL NORTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 5 WALL NORTH,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 5 WALL WEST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 5 WALL WEST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 5 WALL EAST,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 5 WALL EAST,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 5 FLOOR,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 5 FLOOR,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 5 ROOF,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 5 ROOF,[W/m2-K]
+Actuator,Surface,Interior Surface Convection Heat Transfer Coefficient,ZONE 5 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Exterior Surface Convection Heat Transfer Coefficient,ZONE 5 WINDOW SOUTH,[W/m2-K]
+Actuator,Surface,Construction State,ZONE 1 WALL SOUTH,[ ]
+Actuator,Surface,Construction State,ZONE 1 WALL NORTH,[ ]
+Actuator,Surface,Construction State,ZONE 1 WALL WEST,[ ]
+Actuator,Surface,Construction State,ZONE 1 WALL EAST,[ ]
+Actuator,Surface,Construction State,ZONE 1 FLOOR,[ ]
+Actuator,Surface,Construction State,ZONE 1 ROOF,[ ]
+Actuator,Surface,Construction State,ZONE 1 WINDOW SOUTH,[ ]
+Actuator,Surface,Construction State,ZONE 2 WALL SOUTH,[ ]
+Actuator,Surface,Construction State,ZONE 2 WALL NORTH,[ ]
+Actuator,Surface,Construction State,ZONE 2 WALL WEST,[ ]
+Actuator,Surface,Construction State,ZONE 2 WALL EAST,[ ]
+Actuator,Surface,Construction State,ZONE 2 FLOOR,[ ]
+Actuator,Surface,Construction State,ZONE 2 ROOF,[ ]
+Actuator,Surface,Construction State,ZONE 2 WINDOW SOUTH,[ ]
+Actuator,Surface,Construction State,ZONE 3 WALL SOUTH,[ ]
+Actuator,Surface,Construction State,ZONE 3 WALL NORTH,[ ]
+Actuator,Surface,Construction State,ZONE 3 WALL WEST,[ ]
+Actuator,Surface,Construction State,ZONE 3 WALL EAST,[ ]
+Actuator,Surface,Construction State,ZONE 3 FLOOR,[ ]
+Actuator,Surface,Construction State,ZONE 3 ROOF,[ ]
+Actuator,Surface,Construction State,ZONE 3 WINDOW SOUTH,[ ]
+Actuator,Surface,Construction State,ZONE 4 WALL SOUTH,[ ]
+Actuator,Surface,Construction State,ZONE 4 WALL NORTH,[ ]
+Actuator,Surface,Construction State,ZONE 4 WALL WEST,[ ]
+Actuator,Surface,Construction State,ZONE 4 WALL EAST,[ ]
+Actuator,Surface,Construction State,ZONE 4 FLOOR,[ ]
+Actuator,Surface,Construction State,ZONE 4 ROOF,[ ]
+Actuator,Surface,Construction State,ZONE 4 WINDOW SOUTH,[ ]
+Actuator,Surface,Construction State,ZONE 5 WALL SOUTH,[ ]
+Actuator,Surface,Construction State,ZONE 5 WALL NORTH,[ ]
+Actuator,Surface,Construction State,ZONE 5 WALL WEST,[ ]
+Actuator,Surface,Construction State,ZONE 5 WALL EAST,[ ]
+Actuator,Surface,Construction State,ZONE 5 FLOOR,[ ]
+Actuator,Surface,Construction State,ZONE 5 ROOF,[ ]
+Actuator,Surface,Construction State,ZONE 5 WINDOW SOUTH,[ ]
+Actuator,Surface,View Factor To Ground,ZONE 1 WALL SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 1 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 1 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 1 WALL SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 1 WALL SOUTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 1 WALL NORTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 1 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 1 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 1 WALL NORTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 1 WALL NORTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 1 WALL WEST,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 1 WALL WEST,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 1 WALL WEST,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 1 WALL WEST,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 1 WALL WEST,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 1 ROOF,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 1 ROOF,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 1 ROOF,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 1 ROOF,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 1 ROOF,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 1 WINDOW SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 1 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 1 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 1 WINDOW SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 1 WINDOW SOUTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 2 WALL SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 2 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 2 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 2 WALL SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 2 WALL SOUTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 2 WALL NORTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 2 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 2 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 2 WALL NORTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 2 WALL NORTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 2 ROOF,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 2 ROOF,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 2 ROOF,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 2 ROOF,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 2 ROOF,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 2 WINDOW SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 2 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 2 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 2 WINDOW SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 2 WINDOW SOUTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 3 WALL SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 3 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 3 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 3 WALL SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 3 WALL SOUTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 3 WALL NORTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 3 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 3 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 3 WALL NORTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 3 WALL NORTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 3 ROOF,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 3 ROOF,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 3 ROOF,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 3 ROOF,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 3 ROOF,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 3 WINDOW SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 3 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 3 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 3 WINDOW SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 3 WINDOW SOUTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 4 WALL SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 4 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 4 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 4 WALL SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 4 WALL SOUTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 4 WALL NORTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 4 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 4 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 4 WALL NORTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 4 WALL NORTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 4 ROOF,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 4 ROOF,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 4 ROOF,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 4 ROOF,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 4 ROOF,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 4 WINDOW SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 4 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 4 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 4 WINDOW SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 4 WINDOW SOUTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 5 WALL SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 5 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 5 WALL SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 5 WALL SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 5 WALL SOUTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 5 WALL NORTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 5 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 5 WALL NORTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 5 WALL NORTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 5 WALL NORTH,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 5 WALL EAST,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 5 WALL EAST,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 5 WALL EAST,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 5 WALL EAST,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 5 WALL EAST,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 5 ROOF,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 5 ROOF,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 5 ROOF,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 5 ROOF,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 5 ROOF,[degree]
+Actuator,Surface,View Factor To Ground,ZONE 5 WINDOW SOUTH,[ ]
+Actuator,Surface,Outdoor Air Drybulb Temperature,ZONE 5 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wetbulb Temperature,ZONE 5 WINDOW SOUTH,[C]
+Actuator,Surface,Outdoor Air Wind Speed,ZONE 5 WINDOW SOUTH,[m/s]
+Actuator,Surface,Outdoor Air Wind Direction,ZONE 5 WINDOW SOUTH,[degree]
+Actuator,Zone,Outdoor Air Drybulb Temperature,ZONE 1,[C]
+Actuator,Zone,Outdoor Air Wetbulb Temperature,ZONE 1,[C]
+Actuator,Zone,Outdoor Air Wind Speed,ZONE 1,[m/s]
+Actuator,Zone,Outdoor Air Wind Direction,ZONE 1,[degree]
+Actuator,Zone,Outdoor Air Drybulb Temperature,ZONE 2,[C]
+Actuator,Zone,Outdoor Air Wetbulb Temperature,ZONE 2,[C]
+Actuator,Zone,Outdoor Air Wind Speed,ZONE 2,[m/s]
+Actuator,Zone,Outdoor Air Wind Direction,ZONE 2,[degree]
+Actuator,Zone,Outdoor Air Drybulb Temperature,ZONE 3,[C]
+Actuator,Zone,Outdoor Air Wetbulb Temperature,ZONE 3,[C]
+Actuator,Zone,Outdoor Air Wind Speed,ZONE 3,[m/s]
+Actuator,Zone,Outdoor Air Wind Direction,ZONE 3,[degree]
+Actuator,Zone,Outdoor Air Drybulb Temperature,ZONE 4,[C]
+Actuator,Zone,Outdoor Air Wetbulb Temperature,ZONE 4,[C]
+Actuator,Zone,Outdoor Air Wind Speed,ZONE 4,[m/s]
+Actuator,Zone,Outdoor Air Wind Direction,ZONE 4,[degree]
+Actuator,Zone,Outdoor Air Drybulb Temperature,ZONE 5,[C]
+Actuator,Zone,Outdoor Air Wetbulb Temperature,ZONE 5,[C]
+Actuator,Zone,Outdoor Air Wind Speed,ZONE 5,[m/s]
+Actuator,Zone,Outdoor Air Wind Direction,ZONE 5,[degree]
+Actuator,Zone Infiltration,Air Exchange Flow Rate,ZONE 1 INFILTRATION,[m3/s]
+Actuator,Zone Infiltration,Air Exchange Flow Rate,ZONE 2 INFILTRATION,[m3/s]
+Actuator,Zone Infiltration,Air Exchange Flow Rate,ZONE 3 INFILTRATION,[m3/s]
+Actuator,Zone Infiltration,Air Exchange Flow Rate,ZONE 4 INFILTRATION,[m3/s]
+Actuator,Zone Infiltration,Air Exchange Flow Rate,ZONE 5 INFILTRATION,[m3/s]
+Actuator,Sizing:Zone,Zone Design Heating Air Mass Flow Rate,ZONE 1,[kg/s]
+Actuator,Sizing:Zone,Zone Design Cooling Air Mass Flow Rate,ZONE 1,[kg/s]
+Actuator,Sizing:Zone,Zone Design Heating Load,ZONE 1,[W]
+Actuator,Sizing:Zone,Zone Design Cooling Load,ZONE 1,[W]
+Actuator,Sizing:Zone,Zone Design Heating Vol Flow,ZONE 1,[m3/s]
+Actuator,Sizing:Zone,Zone Design Cooling Vol Flow,ZONE 1,[m3/s]
+Actuator,Sizing:Zone,Zone Design Heating Air Mass Flow Rate,ZONE 2,[kg/s]
+Actuator,Sizing:Zone,Zone Design Cooling Air Mass Flow Rate,ZONE 2,[kg/s]
+Actuator,Sizing:Zone,Zone Design Heating Load,ZONE 2,[W]
+Actuator,Sizing:Zone,Zone Design Cooling Load,ZONE 2,[W]
+Actuator,Sizing:Zone,Zone Design Heating Vol Flow,ZONE 2,[m3/s]
+Actuator,Sizing:Zone,Zone Design Cooling Vol Flow,ZONE 2,[m3/s]
+Actuator,Sizing:Zone,Zone Design Heating Air Mass Flow Rate,ZONE 3,[kg/s]
+Actuator,Sizing:Zone,Zone Design Cooling Air Mass Flow Rate,ZONE 3,[kg/s]
+Actuator,Sizing:Zone,Zone Design Heating Load,ZONE 3,[W]
+Actuator,Sizing:Zone,Zone Design Cooling Load,ZONE 3,[W]
+Actuator,Sizing:Zone,Zone Design Heating Vol Flow,ZONE 3,[m3/s]
+Actuator,Sizing:Zone,Zone Design Cooling Vol Flow,ZONE 3,[m3/s]
+Actuator,Sizing:Zone,Zone Design Heating Air Mass Flow Rate,ZONE 4,[kg/s]
+Actuator,Sizing:Zone,Zone Design Cooling Air Mass Flow Rate,ZONE 4,[kg/s]
+Actuator,Sizing:Zone,Zone Design Heating Load,ZONE 4,[W]
+Actuator,Sizing:Zone,Zone Design Cooling Load,ZONE 4,[W]
+Actuator,Sizing:Zone,Zone Design Heating Vol Flow,ZONE 4,[m3/s]
+Actuator,Sizing:Zone,Zone Design Cooling Vol Flow,ZONE 4,[m3/s]
+Actuator,Sizing:Zone,Zone Design Heating Air Mass Flow Rate,ZONE 5,[kg/s]
+Actuator,Sizing:Zone,Zone Design Cooling Air Mass Flow Rate,ZONE 5,[kg/s]
+Actuator,Sizing:Zone,Zone Design Heating Load,ZONE 5,[W]
+Actuator,Sizing:Zone,Zone Design Cooling Load,ZONE 5,[W]
+Actuator,Sizing:Zone,Zone Design Heating Vol Flow,ZONE 5,[m3/s]
+Actuator,Sizing:Zone,Zone Design Cooling Vol Flow,ZONE 5,[m3/s]
+Actuator,Zone Temperature Control,Heating Setpoint,ZONE 1,[C]
+Actuator,Zone Temperature Control,Cooling Setpoint,ZONE 1,[C]
+Actuator,Zone Temperature Control,Heating Setpoint,ZONE 2,[C]
+Actuator,Zone Temperature Control,Cooling Setpoint,ZONE 2,[C]
+Actuator,Zone Temperature Control,Heating Setpoint,ZONE 3,[C]
+Actuator,Zone Temperature Control,Cooling Setpoint,ZONE 3,[C]
+Actuator,Zone Temperature Control,Heating Setpoint,ZONE 4,[C]
+Actuator,Zone Temperature Control,Cooling Setpoint,ZONE 4,[C]
+Actuator,Zone Temperature Control,Heating Setpoint,ZONE 5,[C]
+Actuator,Zone Temperature Control,Cooling Setpoint,ZONE 5,[C]
+Actuator,AirTerminal:SingleDuct:ConstantVolume:NoReheat,Mass Flow Rate,ZONE 1 AIR TERMINAL,[kg/s]
+Actuator,AirTerminal:SingleDuct:ConstantVolume:NoReheat,Mass Flow Rate,ZONE 2 AIR TERMINAL,[kg/s]
+Actuator,AirTerminal:SingleDuct:ConstantVolume:NoReheat,Mass Flow Rate,ZONE 3 AIR TERMINAL,[kg/s]
+Actuator,AirTerminal:SingleDuct:ConstantVolume:NoReheat,Mass Flow Rate,ZONE 4 AIR TERMINAL,[kg/s]
+Actuator,AirTerminal:SingleDuct:ConstantVolume:NoReheat,Mass Flow Rate,ZONE 5 AIR TERMINAL,[kg/s]
+Actuator,Fan,Fan Air Mass Flow Rate,VAV SUPPLY FAN,[kg/s]
+Actuator,Fan,Fan Pressure Rise,VAV SUPPLY FAN,[Pa]
+Actuator,Fan,Fan Total Efficiency,VAV SUPPLY FAN,[fraction]
+Actuator,Fan,Fan Autosized Air Flow Rate,VAV SUPPLY FAN,[m3/s]
+Actuator,Sizing:System,Main Supply Volume Flow Rate,VAV AIR LOOP,[m3/s]
+Actuator,Sizing:System,Main Supply Coincident Peak Cooling Mass Flow Rate,VAV AIR LOOP,[kg/s]
+Actuator,Sizing:System,Main Supply Coincident Peak Heating Mass Flow Rate,VAV AIR LOOP,[kg/s]
+Actuator,Sizing:System,Main Supply Noncoincident Peak Cooling Mass Flow Rate,VAV AIR LOOP,[kg/s]
+Actuator,Sizing:System,Main Supply Noncoincident Peak Heating Mass Flow Rate,VAV AIR LOOP,[kg/s]
+Actuator,Sizing:System,Main Heating Volume Flow Rate,VAV AIR LOOP,[m3/s]
+Actuator,Sizing:System,Main Cooling Volume Flow Rate,VAV AIR LOOP,[m3/s]
+Actuator,Outdoor Air Controller,Air Mass Flow Rate,VAV OA CONTROLLER,[kg/s]
+Actuator,Coil:Cooling:DX:SingleSpeed,Autosized Rated Air Flow Rate,VAV DX COOLING COIL,[m3/s]
+Actuator,Coil:Cooling:DX:SingleSpeed,Autosized Rated Sensible Heat Ratio,VAV DX COOLING COIL,[W/W]
+Actuator,Coil:Cooling:DX:SingleSpeed,Autosized Rated Total Cooling Capacity,VAV DX COOLING COIL,[W]
+Actuator,Curve,Curve Result,DX CAPFT,[unknown]
+Actuator,Curve,Curve Result,DX EIRFT,[unknown]
+Actuator,Curve,Curve Result,DX CAPFFF,[unknown]
+Actuator,Curve,Curve Result,DX EIRFFF,[unknown]
+Actuator,Curve,Curve Result,DX PLF,[unknown]
+Actuator,System Node Setpoint,Temperature Setpoint,VAV SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,VAV SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,VAV SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,VAV SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,VAV SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,VAV SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,VAV SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,VAV SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,VAV SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,OA MIXER OUTLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,OA MIXER OUTLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,OA MIXER OUTLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,OA MIXER OUTLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,OA MIXER OUTLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,OA MIXER OUTLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,OA MIXER OUTLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,OA MIXER OUTLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,OA MIXER OUTLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,DX COIL OUTLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,DX COIL OUTLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,DX COIL OUTLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,DX COIL OUTLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,DX COIL OUTLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,DX COIL OUTLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,DX COIL OUTLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,DX COIL OUTLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,DX COIL OUTLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,VAV SUPPLY OUTLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,VAV SUPPLY OUTLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,VAV SUPPLY OUTLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,VAV SUPPLY OUTLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,VAV SUPPLY OUTLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,VAV SUPPLY OUTLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,VAV SUPPLY OUTLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,VAV SUPPLY OUTLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,VAV SUPPLY OUTLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 1 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 1 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 1 AIR NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 1 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 1 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 1 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 1 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 1 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 1 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 1 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 1 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 1 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 1 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 1 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 1 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 1 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 1 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 1 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 1 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 1 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 1 RETURN NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 1 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 1 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 1 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 1 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 1 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 1 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 2 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 2 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 2 AIR NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 2 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 2 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 2 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 2 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 2 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 2 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 2 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 2 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 2 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 2 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 2 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 2 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 2 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 2 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 2 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 2 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 2 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 2 RETURN NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 2 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 2 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 2 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 2 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 2 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 2 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 3 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 3 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 3 AIR NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 3 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 3 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 3 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 3 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 3 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 3 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 3 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 3 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 3 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 3 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 3 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 3 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 3 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 3 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 3 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 3 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 3 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 3 RETURN NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 3 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 3 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 3 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 3 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 3 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 3 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 4 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 4 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 4 AIR NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 4 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 4 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 4 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 4 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 4 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 4 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 4 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 4 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 4 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 4 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 4 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 4 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 4 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 4 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 4 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 4 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 4 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 4 RETURN NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 4 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 4 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 4 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 4 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 4 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 4 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 5 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 5 AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 5 AIR NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 5 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 5 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 5 AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 5 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 5 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 5 AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 5 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 5 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 5 SUPPLY INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 5 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 5 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 5 SUPPLY INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 5 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 5 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 5 SUPPLY INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 5 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 5 RETURN NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 5 RETURN NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 5 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 5 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 5 RETURN NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 5 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 5 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 5 RETURN NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,VAV DEMAND INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,VAV DEMAND INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,VAV DEMAND INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,VAV DEMAND INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,VAV DEMAND INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,VAV DEMAND INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,VAV DEMAND INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,VAV DEMAND INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,VAV DEMAND INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,VAV RETURN AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,VAV RETURN AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,VAV RETURN AIR NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,VAV RETURN AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,VAV RETURN AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,VAV RETURN AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,VAV RETURN AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,VAV RETURN AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,VAV RETURN AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,OA INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,OA INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,OA INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,OA INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,OA INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,OA INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,OA INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,OA INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,OA INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 1 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 1 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 1 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 1 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 1 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 1 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 1 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 1 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 1 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 2 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 2 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 2 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 2 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 2 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 2 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 2 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 2 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 2 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 3 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 3 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 3 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 3 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 3 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 3 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 3 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 3 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 3 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 4 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 4 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 4 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 4 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 4 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 4 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 4 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 4 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 4 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,ZONE 5 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,ZONE 5 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,ZONE 5 VAV INLET NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,ZONE 5 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,ZONE 5 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,ZONE 5 VAV INLET NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,ZONE 5 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,ZONE 5 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,ZONE 5 VAV INLET NODE,[kg/s]
+Actuator,System Node Setpoint,Temperature Setpoint,RELIEF AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Minimum Setpoint,RELIEF AIR NODE,[C]
+Actuator,System Node Setpoint,Temperature Maximum Setpoint,RELIEF AIR NODE,[C]
+Actuator,System Node Setpoint,Humidity Ratio Setpoint,RELIEF AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Maximum Setpoint,RELIEF AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Humidity Ratio Minimum Setpoint,RELIEF AIR NODE,[kgWater/kgDryAir]
+Actuator,System Node Setpoint,Mass Flow Rate Setpoint,RELIEF AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Maximum Available Setpoint,RELIEF AIR NODE,[kg/s]
+Actuator,System Node Setpoint,Mass Flow Rate Minimum Available Setpoint,RELIEF AIR NODE,[kg/s]
+Actuator,Outdoor Air System Node,Drybulb Temperature,OA INLET NODE,[C]
+Actuator,Outdoor Air System Node,Wetbulb Temperature,OA INLET NODE,[C]
+Actuator,Outdoor Air System Node,Wind Speed,OA INLET NODE,[m/s]
+Actuator,Outdoor Air System Node,Wind Direction,OA INLET NODE,[degree]
+Actuator,AirLoopHVAC,Availability Status,VAV AIR LOOP,[ ]
+**INTERNAL_VARIABLES**
+InternalVariable,People Count Design Level,ZONE 1 PEOPLE,[each]
+InternalVariable,People Count Design Level,ZONE 2 PEOPLE,[each]
+InternalVariable,People Count Design Level,ZONE 3 PEOPLE,[each]
+InternalVariable,People Count Design Level,ZONE 4 PEOPLE,[each]
+InternalVariable,People Count Design Level,ZONE 5 PEOPLE,[each]
+InternalVariable,Lighting Power Design Level,ZONE 1 LIGHTS,[W]
+InternalVariable,Lighting Power Design Level,ZONE 2 LIGHTS,[W]
+InternalVariable,Lighting Power Design Level,ZONE 3 LIGHTS,[W]
+InternalVariable,Lighting Power Design Level,ZONE 4 LIGHTS,[W]
+InternalVariable,Lighting Power Design Level,ZONE 5 LIGHTS,[W]
+InternalVariable,Plug and Process Power Design Level,ZONE 1 EQUIPMENT,[W]
+InternalVariable,Plug and Process Power Design Level,ZONE 2 EQUIPMENT,[W]
+InternalVariable,Plug and Process Power Design Level,ZONE 3 EQUIPMENT,[W]
+InternalVariable,Plug and Process Power Design Level,ZONE 4 EQUIPMENT,[W]
+InternalVariable,Plug and Process Power Design Level,ZONE 5 EQUIPMENT,[W]
+InternalVariable,Zone Floor Area,ZONE 1,[m2]
+InternalVariable,Zone Air Volume,ZONE 1,[m3]
+InternalVariable,Zone Multiplier,ZONE 1,[ ]
+InternalVariable,Zone List Multiplier,ZONE 1,[ ]
+InternalVariable,Zone Floor Area,ZONE 2,[m2]
+InternalVariable,Zone Air Volume,ZONE 2,[m3]
+InternalVariable,Zone Multiplier,ZONE 2,[ ]
+InternalVariable,Zone List Multiplier,ZONE 2,[ ]
+InternalVariable,Zone Floor Area,ZONE 3,[m2]
+InternalVariable,Zone Air Volume,ZONE 3,[m3]
+InternalVariable,Zone Multiplier,ZONE 3,[ ]
+InternalVariable,Zone List Multiplier,ZONE 3,[ ]
+InternalVariable,Zone Floor Area,ZONE 4,[m2]
+InternalVariable,Zone Air Volume,ZONE 4,[m3]
+InternalVariable,Zone Multiplier,ZONE 4,[ ]
+InternalVariable,Zone List Multiplier,ZONE 4,[ ]
+InternalVariable,Zone Floor Area,ZONE 5,[m2]
+InternalVariable,Zone Air Volume,ZONE 5,[m3]
+InternalVariable,Zone Multiplier,ZONE 5,[ ]
+InternalVariable,Zone List Multiplier,ZONE 5,[ ]
+InternalVariable,Final Zone Design Heating Air Mass Flow Rate,ZONE 1,[kg/s]
+InternalVariable,Intermediate Zone Design Heating Air Mass Flow Rate,ZONE 1,[kg/s]
+InternalVariable,Final Zone Design Cooling Air Mass Flow Rate,ZONE 1,[kg/s]
+InternalVariable,Intermediate Zone Design Cooling Air Mass Flow Rate,ZONE 1,[kg/s]
+InternalVariable,Final Zone Design Heating Load,ZONE 1,[W]
+InternalVariable,Intermediate Zone Design Heating Load,ZONE 1,[W]
+InternalVariable,Final Zone Design Cooling Load,ZONE 1,[W]
+InternalVariable,Intermediate Zone Design Cooling Load,ZONE 1,[W]
+InternalVariable,Final Zone Design Heating Air Density,ZONE 1,[kg/m3]
+InternalVariable,Intermediate Zone Design Heating Air Density,ZONE 1,[kg/m3]
+InternalVariable,Final Zone Design Cooling Air Density,ZONE 1,[kg/m3]
+InternalVariable,Intermediate Zone Design Cooling Air Density,ZONE 1,[kg/m3]
+InternalVariable,Final Zone Design Heating Volume Flow,ZONE 1,[m3/s]
+InternalVariable,Intermediate Zone Design Heating Volume Flow,ZONE 1,[m3/s]
+InternalVariable,Final Zone Design Cooling Volume Flow,ZONE 1,[m3/s]
+InternalVariable,Intermediate Zone Design Cooling Volume Flow,ZONE 1,[m3/s]
+InternalVariable,Zone Outdoor Air Design Volume Flow Rate,ZONE 1,[m3/s]
+InternalVariable,Final Zone Design Heating Air Mass Flow Rate,ZONE 2,[kg/s]
+InternalVariable,Intermediate Zone Design Heating Air Mass Flow Rate,ZONE 2,[kg/s]
+InternalVariable,Final Zone Design Cooling Air Mass Flow Rate,ZONE 2,[kg/s]
+InternalVariable,Intermediate Zone Design Cooling Air Mass Flow Rate,ZONE 2,[kg/s]
+InternalVariable,Final Zone Design Heating Load,ZONE 2,[W]
+InternalVariable,Intermediate Zone Design Heating Load,ZONE 2,[W]
+InternalVariable,Final Zone Design Cooling Load,ZONE 2,[W]
+InternalVariable,Intermediate Zone Design Cooling Load,ZONE 2,[W]
+InternalVariable,Final Zone Design Heating Air Density,ZONE 2,[kg/m3]
+InternalVariable,Intermediate Zone Design Heating Air Density,ZONE 2,[kg/m3]
+InternalVariable,Final Zone Design Cooling Air Density,ZONE 2,[kg/m3]
+InternalVariable,Intermediate Zone Design Cooling Air Density,ZONE 2,[kg/m3]
+InternalVariable,Final Zone Design Heating Volume Flow,ZONE 2,[m3/s]
+InternalVariable,Intermediate Zone Design Heating Volume Flow,ZONE 2,[m3/s]
+InternalVariable,Final Zone Design Cooling Volume Flow,ZONE 2,[m3/s]
+InternalVariable,Intermediate Zone Design Cooling Volume Flow,ZONE 2,[m3/s]
+InternalVariable,Zone Outdoor Air Design Volume Flow Rate,ZONE 2,[m3/s]
+InternalVariable,Final Zone Design Heating Air Mass Flow Rate,ZONE 3,[kg/s]
+InternalVariable,Intermediate Zone Design Heating Air Mass Flow Rate,ZONE 3,[kg/s]
+InternalVariable,Final Zone Design Cooling Air Mass Flow Rate,ZONE 3,[kg/s]
+InternalVariable,Intermediate Zone Design Cooling Air Mass Flow Rate,ZONE 3,[kg/s]
+InternalVariable,Final Zone Design Heating Load,ZONE 3,[W]
+InternalVariable,Intermediate Zone Design Heating Load,ZONE 3,[W]
+InternalVariable,Final Zone Design Cooling Load,ZONE 3,[W]
+InternalVariable,Intermediate Zone Design Cooling Load,ZONE 3,[W]
+InternalVariable,Final Zone Design Heating Air Density,ZONE 3,[kg/m3]
+InternalVariable,Intermediate Zone Design Heating Air Density,ZONE 3,[kg/m3]
+InternalVariable,Final Zone Design Cooling Air Density,ZONE 3,[kg/m3]
+InternalVariable,Intermediate Zone Design Cooling Air Density,ZONE 3,[kg/m3]
+InternalVariable,Final Zone Design Heating Volume Flow,ZONE 3,[m3/s]
+InternalVariable,Intermediate Zone Design Heating Volume Flow,ZONE 3,[m3/s]
+InternalVariable,Final Zone Design Cooling Volume Flow,ZONE 3,[m3/s]
+InternalVariable,Intermediate Zone Design Cooling Volume Flow,ZONE 3,[m3/s]
+InternalVariable,Zone Outdoor Air Design Volume Flow Rate,ZONE 3,[m3/s]
+InternalVariable,Final Zone Design Heating Air Mass Flow Rate,ZONE 4,[kg/s]
+InternalVariable,Intermediate Zone Design Heating Air Mass Flow Rate,ZONE 4,[kg/s]
+InternalVariable,Final Zone Design Cooling Air Mass Flow Rate,ZONE 4,[kg/s]
+InternalVariable,Intermediate Zone Design Cooling Air Mass Flow Rate,ZONE 4,[kg/s]
+InternalVariable,Final Zone Design Heating Load,ZONE 4,[W]
+InternalVariable,Intermediate Zone Design Heating Load,ZONE 4,[W]
+InternalVariable,Final Zone Design Cooling Load,ZONE 4,[W]
+InternalVariable,Intermediate Zone Design Cooling Load,ZONE 4,[W]
+InternalVariable,Final Zone Design Heating Air Density,ZONE 4,[kg/m3]
+InternalVariable,Intermediate Zone Design Heating Air Density,ZONE 4,[kg/m3]
+InternalVariable,Final Zone Design Cooling Air Density,ZONE 4,[kg/m3]
+InternalVariable,Intermediate Zone Design Cooling Air Density,ZONE 4,[kg/m3]
+InternalVariable,Final Zone Design Heating Volume Flow,ZONE 4,[m3/s]
+InternalVariable,Intermediate Zone Design Heating Volume Flow,ZONE 4,[m3/s]
+InternalVariable,Final Zone Design Cooling Volume Flow,ZONE 4,[m3/s]
+InternalVariable,Intermediate Zone Design Cooling Volume Flow,ZONE 4,[m3/s]
+InternalVariable,Zone Outdoor Air Design Volume Flow Rate,ZONE 4,[m3/s]
+InternalVariable,Final Zone Design Heating Air Mass Flow Rate,ZONE 5,[kg/s]
+InternalVariable,Intermediate Zone Design Heating Air Mass Flow Rate,ZONE 5,[kg/s]
+InternalVariable,Final Zone Design Cooling Air Mass Flow Rate,ZONE 5,[kg/s]
+InternalVariable,Intermediate Zone Design Cooling Air Mass Flow Rate,ZONE 5,[kg/s]
+InternalVariable,Final Zone Design Heating Load,ZONE 5,[W]
+InternalVariable,Intermediate Zone Design Heating Load,ZONE 5,[W]
+InternalVariable,Final Zone Design Cooling Load,ZONE 5,[W]
+InternalVariable,Intermediate Zone Design Cooling Load,ZONE 5,[W]
+InternalVariable,Final Zone Design Heating Air Density,ZONE 5,[kg/m3]
+InternalVariable,Intermediate Zone Design Heating Air Density,ZONE 5,[kg/m3]
+InternalVariable,Final Zone Design Cooling Air Density,ZONE 5,[kg/m3]
+InternalVariable,Intermediate Zone Design Cooling Air Density,ZONE 5,[kg/m3]
+InternalVariable,Final Zone Design Heating Volume Flow,ZONE 5,[m3/s]
+InternalVariable,Intermediate Zone Design Heating Volume Flow,ZONE 5,[m3/s]
+InternalVariable,Final Zone Design Cooling Volume Flow,ZONE 5,[m3/s]
+InternalVariable,Intermediate Zone Design Cooling Volume Flow,ZONE 5,[m3/s]
+InternalVariable,Zone Outdoor Air Design Volume Flow Rate,ZONE 5,[m3/s]
+InternalVariable,AirTerminal:SingleDuct:ConstantVolume:NoReheat Maximum Mass Flow Rate,ZONE 1 AIR TERMINAL,[kg/s]
+InternalVariable,AirTerminal:SingleDuct:ConstantVolume:NoReheat Maximum Mass Flow Rate,ZONE 2 AIR TERMINAL,[kg/s]
+InternalVariable,AirTerminal:SingleDuct:ConstantVolume:NoReheat Maximum Mass Flow Rate,ZONE 3 AIR TERMINAL,[kg/s]
+InternalVariable,AirTerminal:SingleDuct:ConstantVolume:NoReheat Maximum Mass Flow Rate,ZONE 4 AIR TERMINAL,[kg/s]
+InternalVariable,AirTerminal:SingleDuct:ConstantVolume:NoReheat Maximum Mass Flow Rate,ZONE 5 AIR TERMINAL,[kg/s]
+InternalVariable,Fan Maximum Mass Flow Rate,VAV SUPPLY FAN,[kg/s]
+InternalVariable,Fan Nominal Pressure Rise,VAV SUPPLY FAN,[Pa]
+InternalVariable,Fan Nominal Total Efficiency,VAV SUPPLY FAN,[fraction]
+InternalVariable,Intermediate Air System Main Supply Volume Flow Rate,VAV AIR LOOP,[m3/s]
+InternalVariable,Intermediate Air System Coincident Peak Cooling Mass Flow Rate,VAV AIR LOOP,[kg/s]
+InternalVariable,Intermediate Air System Coincident Peak Heating Mass Flow Rate,VAV AIR LOOP,[kg/s]
+InternalVariable,Intermediate Air System Noncoincident Peak Cooling Mass Flow Rate,VAV AIR LOOP,[kg/s]
+InternalVariable,Intermediate Air System Noncoincident Peak Heating Mass Flow Rate,VAV AIR LOOP,[kg/s]
+InternalVariable,Intermediate Air System Heating Volume Flow Rate,VAV AIR LOOP,[m3/s]
+InternalVariable,Intermediate Air System Cooling Volume Flow Rate,VAV AIR LOOP,[m3/s]
+InternalVariable,Air System Cooling Design Sensible Capacity,VAV AIR LOOP,[W]
+InternalVariable,Air System Cooling Design Total Capacity,VAV AIR LOOP,[W]
+InternalVariable,Air System Heating Design Sensible Capacity,VAV AIR LOOP,[W]
+InternalVariable,Air System Preheating Design Sensible Capacity,VAV AIR LOOP,[W]
+InternalVariable,Air System Outdoor Air Design Volume Flow Rate,VAV AIR LOOP,[m3/s]
+InternalVariable,Air System Cooling Design Mixed Air Temperature,VAV AIR LOOP,[C]
+InternalVariable,Air System Cooling Design Mixed Air Humidity Ratio,VAV AIR LOOP,[kgWater/kgDryAir]
+InternalVariable,Air System Cooling Design Return Air Temperature,VAV AIR LOOP,[C]
+InternalVariable,Air System Cooling Design Return Air Humidity Ratio,VAV AIR LOOP,[kgWater/kgDryAir]
+InternalVariable,Air System Cooling Design Outdoor Air Temperature,VAV AIR LOOP,[C]
+InternalVariable,Air System Cooling Design Outdoor Air Humidity Ratio,VAV AIR LOOP,[kgWater/kgDryAir]
+InternalVariable,Air System Heating Design Mixed Air Temperature,VAV AIR LOOP,[C]
+InternalVariable,Air System Heating Design Mixed Air Humidity Ratio,VAV AIR LOOP,[kgWater/kgDryAir]
+InternalVariable,Air System Heating Design Return Air Temperature,VAV AIR LOOP,[C]
+InternalVariable,Air System Heating Design Return Air Humidity Ratio,VAV AIR LOOP,[kgWater/kgDryAir]
+InternalVariable,Air System Heating Design Outdoor Air Temperature,VAV AIR LOOP,[C]
+InternalVariable,Air System Heating Design Outdoor Air Humidity Ratio,VAV AIR LOOP,[kgWater/kgDryAir]
+InternalVariable,Outdoor Air Controller Maximum Mass Flow Rate,VAV OA CONTROLLER,[kg/s]
+InternalVariable,Outdoor Air Controller Minimum Mass Flow Rate,VAV OA CONTROLLER,[kg/s]
+**PLUGIN_GLOBAL_VARIABLES**
+**TRENDS**
+**METERS**
+OutputMeter,Electricity:Facility,J
+OutputMeter,Electricity:Building,J
+OutputMeter,Electricity:Zone:ZONE 1,J
+OutputMeter,Electricity:SpaceType:GENERAL,J
+OutputMeter,InteriorLights:Electricity,J
+OutputMeter,InteriorLights:Electricity:Zone:ZONE 1,J
+OutputMeter,InteriorLights:Electricity:SpaceType:GENERAL,J
+OutputMeter,General:InteriorLights:Electricity,J
+OutputMeter,General:InteriorLights:Electricity:Zone:ZONE 1,J
+OutputMeter,General:InteriorLights:Electricity:SpaceType:GENERAL,J
+OutputMeter,Electricity:Zone:ZONE 2,J
+OutputMeter,InteriorLights:Electricity:Zone:ZONE 2,J
+OutputMeter,General:InteriorLights:Electricity:Zone:ZONE 2,J
+OutputMeter,Electricity:Zone:ZONE 3,J
+OutputMeter,InteriorLights:Electricity:Zone:ZONE 3,J
+OutputMeter,General:InteriorLights:Electricity:Zone:ZONE 3,J
+OutputMeter,Electricity:Zone:ZONE 4,J
+OutputMeter,InteriorLights:Electricity:Zone:ZONE 4,J
+OutputMeter,General:InteriorLights:Electricity:Zone:ZONE 4,J
+OutputMeter,Electricity:Zone:ZONE 5,J
+OutputMeter,InteriorLights:Electricity:Zone:ZONE 5,J
+OutputMeter,General:InteriorLights:Electricity:Zone:ZONE 5,J
+OutputMeter,InteriorEquipment:Electricity,J
+OutputMeter,InteriorEquipment:Electricity:Zone:ZONE 1,J
+OutputMeter,InteriorEquipment:Electricity:SpaceType:GENERAL,J
+OutputMeter,General:InteriorEquipment:Electricity,J
+OutputMeter,General:InteriorEquipment:Electricity:Zone:ZONE 1,J
+OutputMeter,General:InteriorEquipment:Electricity:SpaceType:GENERAL,J
+OutputMeter,InteriorEquipment:Electricity:Zone:ZONE 2,J
+OutputMeter,General:InteriorEquipment:Electricity:Zone:ZONE 2,J
+OutputMeter,InteriorEquipment:Electricity:Zone:ZONE 3,J
+OutputMeter,General:InteriorEquipment:Electricity:Zone:ZONE 3,J
+OutputMeter,InteriorEquipment:Electricity:Zone:ZONE 4,J
+OutputMeter,General:InteriorEquipment:Electricity:Zone:ZONE 4,J
+OutputMeter,InteriorEquipment:Electricity:Zone:ZONE 5,J
+OutputMeter,General:InteriorEquipment:Electricity:Zone:ZONE 5,J
+OutputMeter,EnergyTransfer:Facility,J
+OutputMeter,EnergyTransfer:Building,J
+OutputMeter,EnergyTransfer:Zone:ZONE 1,J
+OutputMeter,Heating:EnergyTransfer,J
+OutputMeter,Heating:EnergyTransfer:Zone:ZONE 1,J
+OutputMeter,General:Heating:EnergyTransfer,J
+OutputMeter,General:Heating:EnergyTransfer:Zone:ZONE 1,J
+OutputMeter,Cooling:EnergyTransfer,J
+OutputMeter,Cooling:EnergyTransfer:Zone:ZONE 1,J
+OutputMeter,General:Cooling:EnergyTransfer,J
+OutputMeter,General:Cooling:EnergyTransfer:Zone:ZONE 1,J
+OutputMeter,EnergyTransfer:Zone:ZONE 2,J
+OutputMeter,Heating:EnergyTransfer:Zone:ZONE 2,J
+OutputMeter,General:Heating:EnergyTransfer:Zone:ZONE 2,J
+OutputMeter,Cooling:EnergyTransfer:Zone:ZONE 2,J
+OutputMeter,General:Cooling:EnergyTransfer:Zone:ZONE 2,J
+OutputMeter,EnergyTransfer:Zone:ZONE 3,J
+OutputMeter,Heating:EnergyTransfer:Zone:ZONE 3,J
+OutputMeter,General:Heating:EnergyTransfer:Zone:ZONE 3,J
+OutputMeter,Cooling:EnergyTransfer:Zone:ZONE 3,J
+OutputMeter,General:Cooling:EnergyTransfer:Zone:ZONE 3,J
+OutputMeter,EnergyTransfer:Zone:ZONE 4,J
+OutputMeter,Heating:EnergyTransfer:Zone:ZONE 4,J
+OutputMeter,General:Heating:EnergyTransfer:Zone:ZONE 4,J
+OutputMeter,Cooling:EnergyTransfer:Zone:ZONE 4,J
+OutputMeter,General:Cooling:EnergyTransfer:Zone:ZONE 4,J
+OutputMeter,EnergyTransfer:Zone:ZONE 5,J
+OutputMeter,Heating:EnergyTransfer:Zone:ZONE 5,J
+OutputMeter,General:Heating:EnergyTransfer:Zone:ZONE 5,J
+OutputMeter,Cooling:EnergyTransfer:Zone:ZONE 5,J
+OutputMeter,General:Cooling:EnergyTransfer:Zone:ZONE 5,J
+OutputMeter,ElectricityPurchased:Facility,J
+OutputMeter,ElectricityPurchased:Plant,J
+OutputMeter,Cogeneration:ElectricityPurchased,J
+OutputMeter,General:Cogeneration:ElectricityPurchased,J
+OutputMeter,ElectricitySurplusSold:Facility,J
+OutputMeter,ElectricitySurplusSold:Plant,J
+OutputMeter,Cogeneration:ElectricitySurplusSold,J
+OutputMeter,General:Cogeneration:ElectricitySurplusSold,J
+OutputMeter,ElectricityNet:Facility,J
+OutputMeter,ElectricityNet:Plant,J
+OutputMeter,Cogeneration:ElectricityNet,J
+OutputMeter,General:Cogeneration:ElectricityNet,J
+OutputMeter,Electricity:HVAC,J
+OutputMeter,Fans:Electricity,J
+OutputMeter,General:Fans:Electricity,J
+OutputMeter,EnergyTransfer:HVAC,J
+OutputMeter,CoolingCoils:EnergyTransfer,J
+OutputMeter,Cooling:Electricity,J
+OutputMeter,General:Cooling:Electricity,J
+OutputMeter,Carbon Equivalent:Facility,kg
+OutputMeter,CarbonEquivalentEmissions:Carbon Equivalent,kg
+**VARIABLES**
+OutputVariable,Site Outdoor Air Drybulb Temperature,ENVIRONMENT,C
+OutputVariable,Site Outdoor Air Humidity Ratio,ENVIRONMENT,kgWater/kgDryAir
+OutputVariable,Lights Electricity Energy,ZONE 1 LIGHTS,J
+OutputVariable,Lights Electricity Energy,ZONE 2 LIGHTS,J
+OutputVariable,Lights Electricity Energy,ZONE 3 LIGHTS,J
+OutputVariable,Lights Electricity Energy,ZONE 4 LIGHTS,J
+OutputVariable,Lights Electricity Energy,ZONE 5 LIGHTS,J
+OutputVariable,Electric Equipment Electricity Energy,ZONE 1 EQUIPMENT,J
+OutputVariable,Electric Equipment Electricity Energy,ZONE 2 EQUIPMENT,J
+OutputVariable,Electric Equipment Electricity Energy,ZONE 3 EQUIPMENT,J
+OutputVariable,Electric Equipment Electricity Energy,ZONE 4 EQUIPMENT,J
+OutputVariable,Electric Equipment Electricity Energy,ZONE 5 EQUIPMENT,J
+OutputVariable,Zone Mean Air Temperature,ZONE 1,C
+OutputVariable,Zone Mean Air Temperature,ZONE 2,C
+OutputVariable,Zone Mean Air Temperature,ZONE 3,C
+OutputVariable,Zone Mean Air Temperature,ZONE 4,C
+OutputVariable,Zone Mean Air Temperature,ZONE 5,C
+OutputVariable,Zone Air Humidity Ratio,ZONE 1,
+OutputVariable,Zone Air Relative Humidity,ZONE 1,%
+OutputVariable,Zone Air System Sensible Heating Energy,ZONE 1,J
+OutputVariable,Zone Air System Sensible Cooling Energy,ZONE 1,J
+OutputVariable,Zone Thermostat Heating Setpoint Temperature,ZONE 1,C
+OutputVariable,Zone Thermostat Cooling Setpoint Temperature,ZONE 1,C
+OutputVariable,Zone Air Humidity Ratio,ZONE 2,
+OutputVariable,Zone Air Relative Humidity,ZONE 2,%
+OutputVariable,Zone Air System Sensible Heating Energy,ZONE 2,J
+OutputVariable,Zone Air System Sensible Cooling Energy,ZONE 2,J
+OutputVariable,Zone Thermostat Heating Setpoint Temperature,ZONE 2,C
+OutputVariable,Zone Thermostat Cooling Setpoint Temperature,ZONE 2,C
+OutputVariable,Zone Air Humidity Ratio,ZONE 3,
+OutputVariable,Zone Air Relative Humidity,ZONE 3,%
+OutputVariable,Zone Air System Sensible Heating Energy,ZONE 3,J
+OutputVariable,Zone Air System Sensible Cooling Energy,ZONE 3,J
+OutputVariable,Zone Thermostat Heating Setpoint Temperature,ZONE 3,C
+OutputVariable,Zone Thermostat Cooling Setpoint Temperature,ZONE 3,C
+OutputVariable,Zone Air Humidity Ratio,ZONE 4,
+OutputVariable,Zone Air Relative Humidity,ZONE 4,%
+OutputVariable,Zone Air System Sensible Heating Energy,ZONE 4,J
+OutputVariable,Zone Air System Sensible Cooling Energy,ZONE 4,J
+OutputVariable,Zone Thermostat Heating Setpoint Temperature,ZONE 4,C
+OutputVariable,Zone Thermostat Cooling Setpoint Temperature,ZONE 4,C
+OutputVariable,Zone Air Humidity Ratio,ZONE 5,
+OutputVariable,Zone Air Relative Humidity,ZONE 5,%
+OutputVariable,Zone Air System Sensible Heating Energy,ZONE 5,J
+OutputVariable,Zone Air System Sensible Cooling Energy,ZONE 5,J
+OutputVariable,Zone Thermostat Heating Setpoint Temperature,ZONE 5,C
+OutputVariable,Zone Thermostat Cooling Setpoint Temperature,ZONE 5,C
+OutputVariable,Zone Air CO2 Concentration,ZONE 1,ppm
+OutputVariable,Zone Air CO2 Concentration,ZONE 2,ppm
+OutputVariable,Zone Air CO2 Concentration,ZONE 3,ppm
+OutputVariable,Zone Air CO2 Concentration,ZONE 4,ppm
+OutputVariable,Zone Air CO2 Concentration,ZONE 5,ppm
+OutputVariable,Facility Total Purchased Electricity Energy,WHOLE BUILDING,J
+OutputVariable,Facility Total Surplus Electricity Energy,WHOLE BUILDING,J
+OutputVariable,Facility Net Purchased Electricity Energy,WHOLE BUILDING,J
+OutputVariable,Fan Electricity Rate,VAV SUPPLY FAN,W
+OutputVariable,Fan Electricity Energy,VAV SUPPLY FAN,J
+OutputVariable,Air System Outdoor Air Mass Flow Rate,VAV AIR LOOP,kg/s
+OutputVariable,Cooling Coil Total Cooling Rate,VAV DX COOLING COIL,W
+OutputVariable,Cooling Coil Total Cooling Energy,VAV DX COOLING COIL,J
+OutputVariable,Cooling Coil Sensible Cooling Rate,VAV DX COOLING COIL,W
+OutputVariable,Cooling Coil Latent Cooling Rate,VAV DX COOLING COIL,W
+OutputVariable,Cooling Coil Electricity Rate,VAV DX COOLING COIL,W
+OutputVariable,Cooling Coil Electricity Energy,VAV DX COOLING COIL,J
+OutputVariable,Cooling Coil Crankcase Heater Electricity Energy,VAV DX COOLING COIL,J
+OutputVariable,System Node Temperature,VAV SUPPLY INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,VAV SUPPLY INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,VAV SUPPLY INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,VAV SUPPLY INLET NODE,C
+OutputVariable,System Node Relative Humidity,VAV SUPPLY INLET NODE,%
+OutputVariable,System Node CO2 Concentration,VAV SUPPLY INLET NODE,ppm
+OutputVariable,System Node Temperature,OA MIXER OUTLET NODE,C
+OutputVariable,System Node Mass Flow Rate,OA MIXER OUTLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,OA MIXER OUTLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,OA MIXER OUTLET NODE,C
+OutputVariable,System Node Relative Humidity,OA MIXER OUTLET NODE,%
+OutputVariable,System Node CO2 Concentration,OA MIXER OUTLET NODE,ppm
+OutputVariable,System Node Temperature,DX COIL OUTLET NODE,C
+OutputVariable,System Node Mass Flow Rate,DX COIL OUTLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,DX COIL OUTLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,DX COIL OUTLET NODE,C
+OutputVariable,System Node Relative Humidity,DX COIL OUTLET NODE,%
+OutputVariable,System Node CO2 Concentration,DX COIL OUTLET NODE,ppm
+OutputVariable,System Node Temperature,VAV SUPPLY OUTLET NODE,C
+OutputVariable,System Node Mass Flow Rate,VAV SUPPLY OUTLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,VAV SUPPLY OUTLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,VAV SUPPLY OUTLET NODE,C
+OutputVariable,System Node Relative Humidity,VAV SUPPLY OUTLET NODE,%
+OutputVariable,System Node CO2 Concentration,VAV SUPPLY OUTLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 1 AIR NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 1 AIR NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 1 AIR NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 1 AIR NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 1 AIR NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 1 AIR NODE,ppm
+OutputVariable,System Node Temperature,ZONE 1 SUPPLY INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 1 SUPPLY INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 1 SUPPLY INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 1 SUPPLY INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 1 SUPPLY INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 1 SUPPLY INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 1 RETURN NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 1 RETURN NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 1 RETURN NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 1 RETURN NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 1 RETURN NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 1 RETURN NODE,ppm
+OutputVariable,System Node Temperature,ZONE 2 AIR NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 2 AIR NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 2 AIR NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 2 AIR NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 2 AIR NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 2 AIR NODE,ppm
+OutputVariable,System Node Temperature,ZONE 2 SUPPLY INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 2 SUPPLY INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 2 SUPPLY INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 2 SUPPLY INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 2 SUPPLY INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 2 SUPPLY INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 2 RETURN NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 2 RETURN NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 2 RETURN NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 2 RETURN NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 2 RETURN NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 2 RETURN NODE,ppm
+OutputVariable,System Node Temperature,ZONE 3 AIR NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 3 AIR NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 3 AIR NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 3 AIR NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 3 AIR NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 3 AIR NODE,ppm
+OutputVariable,System Node Temperature,ZONE 3 SUPPLY INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 3 SUPPLY INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 3 SUPPLY INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 3 SUPPLY INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 3 SUPPLY INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 3 SUPPLY INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 3 RETURN NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 3 RETURN NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 3 RETURN NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 3 RETURN NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 3 RETURN NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 3 RETURN NODE,ppm
+OutputVariable,System Node Temperature,ZONE 4 AIR NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 4 AIR NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 4 AIR NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 4 AIR NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 4 AIR NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 4 AIR NODE,ppm
+OutputVariable,System Node Temperature,ZONE 4 SUPPLY INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 4 SUPPLY INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 4 SUPPLY INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 4 SUPPLY INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 4 SUPPLY INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 4 SUPPLY INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 4 RETURN NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 4 RETURN NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 4 RETURN NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 4 RETURN NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 4 RETURN NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 4 RETURN NODE,ppm
+OutputVariable,System Node Temperature,ZONE 5 AIR NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 5 AIR NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 5 AIR NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 5 AIR NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 5 AIR NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 5 AIR NODE,ppm
+OutputVariable,System Node Temperature,ZONE 5 SUPPLY INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 5 SUPPLY INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 5 SUPPLY INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 5 SUPPLY INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 5 SUPPLY INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 5 SUPPLY INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 5 RETURN NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 5 RETURN NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 5 RETURN NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 5 RETURN NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 5 RETURN NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 5 RETURN NODE,ppm
+OutputVariable,System Node Temperature,VAV DEMAND INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,VAV DEMAND INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,VAV DEMAND INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,VAV DEMAND INLET NODE,C
+OutputVariable,System Node Relative Humidity,VAV DEMAND INLET NODE,%
+OutputVariable,System Node CO2 Concentration,VAV DEMAND INLET NODE,ppm
+OutputVariable,System Node Temperature,VAV RETURN AIR NODE,C
+OutputVariable,System Node Mass Flow Rate,VAV RETURN AIR NODE,kg/s
+OutputVariable,System Node Humidity Ratio,VAV RETURN AIR NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,VAV RETURN AIR NODE,C
+OutputVariable,System Node Relative Humidity,VAV RETURN AIR NODE,%
+OutputVariable,System Node CO2 Concentration,VAV RETURN AIR NODE,ppm
+OutputVariable,System Node Temperature,OA INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,OA INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,OA INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,OA INLET NODE,C
+OutputVariable,System Node Relative Humidity,OA INLET NODE,%
+OutputVariable,System Node CO2 Concentration,OA INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 1 VAV INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 1 VAV INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 1 VAV INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 1 VAV INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 1 VAV INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 1 VAV INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 2 VAV INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 2 VAV INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 2 VAV INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 2 VAV INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 2 VAV INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 2 VAV INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 3 VAV INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 3 VAV INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 3 VAV INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 3 VAV INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 3 VAV INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 3 VAV INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 4 VAV INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 4 VAV INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 4 VAV INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 4 VAV INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 4 VAV INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 4 VAV INLET NODE,ppm
+OutputVariable,System Node Temperature,ZONE 5 VAV INLET NODE,C
+OutputVariable,System Node Mass Flow Rate,ZONE 5 VAV INLET NODE,kg/s
+OutputVariable,System Node Humidity Ratio,ZONE 5 VAV INLET NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,ZONE 5 VAV INLET NODE,C
+OutputVariable,System Node Relative Humidity,ZONE 5 VAV INLET NODE,%
+OutputVariable,System Node CO2 Concentration,ZONE 5 VAV INLET NODE,ppm
+OutputVariable,System Node Temperature,RELIEF AIR NODE,C
+OutputVariable,System Node Mass Flow Rate,RELIEF AIR NODE,kg/s
+OutputVariable,System Node Humidity Ratio,RELIEF AIR NODE,kgWater/kgDryAir
+OutputVariable,System Node Setpoint Temperature,RELIEF AIR NODE,C
+OutputVariable,System Node Relative Humidity,RELIEF AIR NODE,%
+OutputVariable,System Node CO2 Concentration,RELIEF AIR NODE,ppm
+OutputVariable,Environmental Impact Total N2O Emissions Carbon Equivalent Mass,SITE,kg
+OutputVariable,Environmental Impact Total CH4 Emissions Carbon Equivalent Mass,SITE,kg
+OutputVariable,Environmental Impact Total CO2 Emissions Carbon Equivalent Mass,SITE,kg
