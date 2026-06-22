@@ -1,0 +1,862 @@
+!-   ==========================================================================
+!-   Multi-Zone VAV System  -  CONTROL-FREE plant for runtime Python control
+!-   5 thermal zones | DX cooling AHU | CO2 contaminant balance
+!-   No EMS / no hardcoded control. Drive via the EnergyPlus Python API:
+!-     * central SAT setpoint  -> actuator on 'DX Coil Outlet Node'
+!-     * per-zone airflow       -> 'Mass Flow Rate' on each terminal (kg/s, key=terminal)
+!-     * per-zone setpoints      -> 'Zone Temperature Control' Heating/Cooling
+!-     * outdoor-air flow        -> 'Outdoor Air Controller' Air Mass Flow Rate
+!-   Climate: Colombo, Sri Lanka (hot & humid). Requires a Colombo .epw at run time.
+!-   ==========================================================================
+
+Version, 25.2;
+
+SimulationControl,
+  Yes,                     !- Do Zone Sizing Calculation
+  Yes,                     !- Do System Sizing Calculation
+  No,                      !- Do Plant Sizing Calculation
+  No,                      !- Run Simulation for Sizing Periods
+  Yes,                     !- Run Simulation for Weather File Run Periods
+  No,                      !- Do HVAC Sizing Simulation for Sizing Periods
+  1;                       !- Maximum Number of HVAC Sizing Simulation Passes
+
+Building,
+  Multi-Zone VAV Building,  !- Name
+  0.0,                     !- North Axis {deg}
+  City,                    !- Terrain
+  0.04,                    !- Loads Convergence Tolerance Value
+  0.40,                    !- Temperature Convergence Tolerance Value {deltaC}
+  FullExterior,            !- Solar Distribution
+  25,                      !- Maximum Number of Warmup Days
+  6;                       !- Minimum Number of Warmup Days
+
+Timestep, 6;
+
+GlobalGeometryRules,
+  UpperLeftCorner,         !- Starting Vertex Position
+  Counterclockwise,        !- Vertex Entry Direction
+  World;                   !- Coordinate System
+
+Site:Location,
+  Colombo Sri Lanka,       !- Name
+  6.90,                    !- Latitude {deg}
+  79.86,                   !- Longitude {deg}
+  5.5,                     !- Time Zone {hr}
+  7.0;                     !- Elevation {m}
+
+SizingPeriod:DesignDay,
+  Colombo Cooling Design Day,  !- Name
+  4, 21, SummerDesignDay,  !- Month / Day / Day Type
+  33.0,                    !- Maximum Dry-Bulb Temperature {C}
+  7.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
+  , ,                      !- Range Modifier Type / Schedule
+  Wetbulb,                 !- Humidity Condition Type
+  27.0,                    !- Wetbulb at Maximum Dry-Bulb {C}
+  , , , ,                  !- (humidity schedule / ratio / enthalpy / wb range)
+  101200.,                 !- Barometric Pressure {Pa}
+  3.0,                     !- Wind Speed {m/s}
+  0.,                      !- Wind Direction {deg}
+  No, No, No,              !- Rain / Snow / Daylight Saving
+  ASHRAEClearSky,          !- Solar Model Indicator
+  , , , ,                  !- (solar schedules / taub / taud)
+  1.0;                     !- Sky Clearness
+
+SizingPeriod:DesignDay,
+  Colombo Heating Design Day,  !- Name
+  1, 21, WinterDesignDay,  !- Month / Day / Day Type
+  22.0,                    !- Maximum Dry-Bulb Temperature {C}
+  0.0,                     !- Daily Dry-Bulb Temperature Range {deltaC}
+  , ,                      !- Range Modifier Type / Schedule
+  Wetbulb,                 !- Humidity Condition Type
+  21.0,                    !- Wetbulb at Maximum Dry-Bulb {C}
+  , , , ,                  !- (humidity schedule / ratio / enthalpy / wb range)
+  101200.,                 !- Barometric Pressure {Pa}
+  3.0,                     !- Wind Speed {m/s}
+  0.,                      !- Wind Direction {deg}
+  No, No, No,              !- Rain / Snow / Daylight Saving
+  ASHRAEClearSky,          !- Solar Model Indicator
+  , , , ,                  !- (solar schedules / taub / taud)
+  0.0;                     !- Sky Clearness
+
+RunPeriod,
+  Annual Run,              !- Name
+  1, 1, ,                  !- Begin Month / Day / Year
+  12, 31, ,                !- End Month / Day / Year
+  Monday,                  !- Day of Week for Start Day
+  Yes, Yes, No, Yes, Yes;  !- Wx holidays / DST / weekend rule / rain / snow
+
+Sizing:Parameters, 1.2, 1.2;
+
+!-   ============================  SCHEDULES  ===============================
+!-   Setpoint schedules below are INITIAL DEFAULTS only. Python overrides them
+!-   each timestep through the actuators; they exist so the model is valid and
+!-   can warm up / size before your controller takes over.
+ScheduleTypeLimits, Fraction, 0.0, 1.0, Continuous;
+ScheduleTypeLimits, Temperature, -60.0, 200.0, Continuous, Temperature;
+ScheduleTypeLimits, ControlType, 0, 4, Discrete;
+ScheduleTypeLimits, AnyNumber;
+ScheduleTypeLimits, ActivityLevel, 0.0, , Continuous, ActivityLevel;
+
+Schedule:Constant, Always On, Fraction, 1.0;
+Schedule:Constant, Activity Level, ActivityLevel, 120.0;
+Schedule:Constant, Heating SP Sched, Temperature, 18.0;
+Schedule:Constant, Control Type Sched, ControlType, 4;
+Schedule:Constant, Outdoor CO2 Schedule, AnyNumber, 400.0;
+Schedule:Constant, SAT Setpoint Schedule, Temperature, 13.0;
+Schedule:Constant, Server Equipment Sched, Fraction, 0.90;
+
+Schedule:Compact, Office Occupancy, Fraction,
+  Through: 12/31, For: Weekdays SummerDesignDay,
+  Until: 08:00, 0.05, Until: 18:00, 1.00, Until: 24:00, 0.05,
+  For: AllOtherDays, Until: 24:00, 0.0;
+
+Schedule:Compact, Office Lighting, Fraction,
+  Through: 12/31, For: Weekdays SummerDesignDay,
+  Until: 08:00, 0.10, Until: 18:00, 0.90, Until: 24:00, 0.10,
+  For: AllOtherDays, Until: 24:00, 0.05;
+
+Schedule:Compact, Office Equipment, Fraction,
+  Through: 12/31, For: Weekdays SummerDesignDay,
+  Until: 08:00, 0.30, Until: 18:00, 0.90, Until: 24:00, 0.30,
+  For: AllOtherDays, Until: 24:00, 0.20;
+
+Schedule:Constant, Zone 1 Cooling SP Sched, Temperature, 24.0;
+Schedule:Constant, Zone 2 Cooling SP Sched, Temperature, 24.0;
+Schedule:Constant, Zone 3 Cooling SP Sched, Temperature, 23.0;
+Schedule:Constant, Zone 4 Cooling SP Sched, Temperature, 21.0;
+Schedule:Constant, Zone 5 Cooling SP Sched, Temperature, 24.0;
+
+!-   ======================  MATERIALS / CONSTRUCTIONS  =====================
+Material, M_Stucco, MediumRough, 0.025, 0.72, 1856.0, 840.0, 0.90, 0.92, 0.92;
+Material, M_Concrete200, MediumRough, 0.20, 1.95, 2240.0, 900.0, 0.90, 0.70, 0.70;
+Material, M_Insulation, MediumRough, 0.075, 0.049, 265.0, 836.0, 0.90, 0.70, 0.70;
+Material, M_Gypsum, Smooth, 0.016, 0.16, 800.0, 1090.0, 0.90, 0.50, 0.50;
+Material, M_RoofMembrane, VeryRough, 0.010, 0.16, 1120.0, 1460.0, 0.90, 0.70, 0.70;
+Material, M_RoofInsulation, MediumRough, 0.12, 0.049, 265.0, 836.0, 0.90, 0.70, 0.70;
+Material, M_FloorSlab, MediumRough, 0.10, 1.31, 2240.0, 900.0, 0.90, 0.70, 0.70;
+
+WindowMaterial:SimpleGlazingSystem, SimpleGlazing, 3.0, 0.40, 0.60;
+
+Construction, Exterior Wall, M_Stucco, M_Concrete200, M_Insulation, M_Gypsum;
+Construction, Interior Wall, M_Gypsum, M_Gypsum;
+Construction, Roof, M_RoofMembrane, M_RoofInsulation, M_Concrete200;
+Construction, Floor, M_FloorSlab;
+Construction, Exterior Window, SimpleGlazing;
+
+!-   ===========================  ZONES & LOADS  ============================
+!-   ---- Zone 1: Open Office ----
+Zone,
+  Zone 1, 0, 0, 0, 0, 1, 1, autocalculate, autocalculate;
+
+BuildingSurface:Detailed,
+  Zone 1 Wall South,
+  Wall, Exterior Wall, Zone 1, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  0.000, 0.000, 3.000,
+  0.000, 0.000, 0.000,
+  5.000, 0.000, 0.000,
+  5.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 1 Wall North,
+  Wall, Exterior Wall, Zone 1, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  5.000, 8.000, 3.000,
+  5.000, 8.000, 0.000,
+  0.000, 8.000, 0.000,
+  0.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 1 Wall West,
+  Wall, Exterior Wall, Zone 1, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  0.000, 8.000, 3.000,
+  0.000, 8.000, 0.000,
+  0.000, 0.000, 0.000,
+  0.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 1 Wall East,
+  Wall, Interior Wall, Zone 1, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  5.000, 0.000, 3.000,
+  5.000, 0.000, 0.000,
+  5.000, 8.000, 0.000,
+  5.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 1 Roof,
+  Roof, Roof, Zone 1, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  0.000, 8.000, 3.000,
+  0.000, 0.000, 3.000,
+  5.000, 0.000, 3.000,
+  5.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 1 Floor,
+  Floor, Floor, Zone 1, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  0.000, 0.000, 0.000,
+  0.000, 8.000, 0.000,
+  5.000, 8.000, 0.000,
+  5.000, 0.000, 0.000;
+
+FenestrationSurface:Detailed,
+  Zone 1 Window South, Window, Exterior Window, Zone 1 Wall South, ,
+  autocalculate, , 1.0,
+  4,                       !- Number of Vertices
+  1.000, 0.000, 2.500,
+  1.000, 0.000, 1.000,
+  4.000, 0.000, 1.000,
+  4.000, 0.000, 2.500;
+
+People,
+  Zone 1 People, Zone 1, Office Occupancy, People, 8, , , 0.30, autocalculate, Activity Level, 3.82E-8;
+Lights,
+  Zone 1 Lights, Zone 1, Office Lighting, Watts/Area, , 10, , 0.0, 0.42, 0.18, 1.0, General;
+ElectricEquipment,
+  Zone 1 Equipment, Zone 1, Office Equipment, Watts/Area, , 12, , 0.0, 0.30, 0.0, General;
+ZoneInfiltration:DesignFlowRate,
+  Zone 1 Infiltration, Zone 1, Always On, Flow/Area, , 0.0003, , , 1.0, 0.0, 0.0, 0.0;
+
+DesignSpecification:OutdoorAir,
+  Zone 1 OA Spec, Flow/Person, 0.008, 0.0, 0.0, 0.0;
+Sizing:Zone,
+  Zone 1, SupplyAirTemperature, 13.0, 11.11, SupplyAirTemperature, 40.0, 11.11,
+  0.0085, 0.008, Zone 1 OA Spec, , , DesignDay;
+ThermostatSetpoint:DualSetpoint,
+  Zone 1 DualSP, Heating SP Sched, Zone 1 Cooling SP Sched;
+ZoneControl:Thermostat,
+  Zone 1 Thermostat, Zone 1, Control Type Sched, ThermostatSetpoint:DualSetpoint, Zone 1 DualSP;
+
+!-   ---- Zone 2: Private Offices ----
+Zone,
+  Zone 2, 0, 0, 0, 0, 1, 1, autocalculate, autocalculate;
+
+BuildingSurface:Detailed,
+  Zone 2 Wall South,
+  Wall, Exterior Wall, Zone 2, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  5.000, 0.000, 3.000,
+  5.000, 0.000, 0.000,
+  10.000, 0.000, 0.000,
+  10.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 2 Wall North,
+  Wall, Exterior Wall, Zone 2, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  10.000, 8.000, 3.000,
+  10.000, 8.000, 0.000,
+  5.000, 8.000, 0.000,
+  5.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 2 Wall West,
+  Wall, Interior Wall, Zone 2, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  5.000, 8.000, 3.000,
+  5.000, 8.000, 0.000,
+  5.000, 0.000, 0.000,
+  5.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 2 Wall East,
+  Wall, Interior Wall, Zone 2, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  10.000, 0.000, 3.000,
+  10.000, 0.000, 0.000,
+  10.000, 8.000, 0.000,
+  10.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 2 Roof,
+  Roof, Roof, Zone 2, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  5.000, 8.000, 3.000,
+  5.000, 0.000, 3.000,
+  10.000, 0.000, 3.000,
+  10.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 2 Floor,
+  Floor, Floor, Zone 2, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  5.000, 0.000, 0.000,
+  5.000, 8.000, 0.000,
+  10.000, 8.000, 0.000,
+  10.000, 0.000, 0.000;
+
+FenestrationSurface:Detailed,
+  Zone 2 Window South, Window, Exterior Window, Zone 2 Wall South, ,
+  autocalculate, , 1.0,
+  4,                       !- Number of Vertices
+  6.000, 0.000, 2.500,
+  6.000, 0.000, 1.000,
+  9.000, 0.000, 1.000,
+  9.000, 0.000, 2.500;
+
+People,
+  Zone 2 People, Zone 2, Office Occupancy, People, 4, , , 0.30, autocalculate, Activity Level, 3.82E-8;
+Lights,
+  Zone 2 Lights, Zone 2, Office Lighting, Watts/Area, , 9, , 0.0, 0.42, 0.18, 1.0, General;
+ElectricEquipment,
+  Zone 2 Equipment, Zone 2, Office Equipment, Watts/Area, , 10, , 0.0, 0.30, 0.0, General;
+ZoneInfiltration:DesignFlowRate,
+  Zone 2 Infiltration, Zone 2, Always On, Flow/Area, , 0.0003, , , 1.0, 0.0, 0.0, 0.0;
+
+DesignSpecification:OutdoorAir,
+  Zone 2 OA Spec, Flow/Person, 0.008, 0.0, 0.0, 0.0;
+Sizing:Zone,
+  Zone 2, SupplyAirTemperature, 13.0, 11.11, SupplyAirTemperature, 40.0, 11.11,
+  0.0085, 0.008, Zone 2 OA Spec, , , DesignDay;
+ThermostatSetpoint:DualSetpoint,
+  Zone 2 DualSP, Heating SP Sched, Zone 2 Cooling SP Sched;
+ZoneControl:Thermostat,
+  Zone 2 Thermostat, Zone 2, Control Type Sched, ThermostatSetpoint:DualSetpoint, Zone 2 DualSP;
+
+!-   ---- Zone 3: Conference Room ----
+Zone,
+  Zone 3, 0, 0, 0, 0, 1, 1, autocalculate, autocalculate;
+
+BuildingSurface:Detailed,
+  Zone 3 Wall South,
+  Wall, Exterior Wall, Zone 3, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  10.000, 0.000, 3.000,
+  10.000, 0.000, 0.000,
+  15.000, 0.000, 0.000,
+  15.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 3 Wall North,
+  Wall, Exterior Wall, Zone 3, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  15.000, 8.000, 3.000,
+  15.000, 8.000, 0.000,
+  10.000, 8.000, 0.000,
+  10.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 3 Wall West,
+  Wall, Interior Wall, Zone 3, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  10.000, 8.000, 3.000,
+  10.000, 8.000, 0.000,
+  10.000, 0.000, 0.000,
+  10.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 3 Wall East,
+  Wall, Interior Wall, Zone 3, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  15.000, 0.000, 3.000,
+  15.000, 0.000, 0.000,
+  15.000, 8.000, 0.000,
+  15.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 3 Roof,
+  Roof, Roof, Zone 3, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  10.000, 8.000, 3.000,
+  10.000, 0.000, 3.000,
+  15.000, 0.000, 3.000,
+  15.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 3 Floor,
+  Floor, Floor, Zone 3, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  10.000, 0.000, 0.000,
+  10.000, 8.000, 0.000,
+  15.000, 8.000, 0.000,
+  15.000, 0.000, 0.000;
+
+FenestrationSurface:Detailed,
+  Zone 3 Window South, Window, Exterior Window, Zone 3 Wall South, ,
+  autocalculate, , 1.0,
+  4,                       !- Number of Vertices
+  11.000, 0.000, 2.500,
+  11.000, 0.000, 1.000,
+  14.000, 0.000, 1.000,
+  14.000, 0.000, 2.500;
+
+People,
+  Zone 3 People, Zone 3, Office Occupancy, People, 12, , , 0.30, autocalculate, Activity Level, 3.82E-8;
+Lights,
+  Zone 3 Lights, Zone 3, Office Lighting, Watts/Area, , 8, , 0.0, 0.42, 0.18, 1.0, General;
+ElectricEquipment,
+  Zone 3 Equipment, Zone 3, Office Equipment, Watts/Area, , 5, , 0.0, 0.30, 0.0, General;
+ZoneInfiltration:DesignFlowRate,
+  Zone 3 Infiltration, Zone 3, Always On, Flow/Area, , 0.0003, , , 1.0, 0.0, 0.0, 0.0;
+
+DesignSpecification:OutdoorAir,
+  Zone 3 OA Spec, Flow/Person, 0.01, 0.0, 0.0, 0.0;
+Sizing:Zone,
+  Zone 3, SupplyAirTemperature, 13.0, 11.11, SupplyAirTemperature, 40.0, 11.11,
+  0.0085, 0.008, Zone 3 OA Spec, , , DesignDay;
+ThermostatSetpoint:DualSetpoint,
+  Zone 3 DualSP, Heating SP Sched, Zone 3 Cooling SP Sched;
+ZoneControl:Thermostat,
+  Zone 3 Thermostat, Zone 3, Control Type Sched, ThermostatSetpoint:DualSetpoint, Zone 3 DualSP;
+
+!-   ---- Zone 4: Server Room ----
+Zone,
+  Zone 4, 0, 0, 0, 0, 1, 1, autocalculate, autocalculate;
+
+BuildingSurface:Detailed,
+  Zone 4 Wall South,
+  Wall, Exterior Wall, Zone 4, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  15.000, 0.000, 3.000,
+  15.000, 0.000, 0.000,
+  20.000, 0.000, 0.000,
+  20.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 4 Wall North,
+  Wall, Exterior Wall, Zone 4, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  20.000, 8.000, 3.000,
+  20.000, 8.000, 0.000,
+  15.000, 8.000, 0.000,
+  15.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 4 Wall West,
+  Wall, Interior Wall, Zone 4, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  15.000, 8.000, 3.000,
+  15.000, 8.000, 0.000,
+  15.000, 0.000, 0.000,
+  15.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 4 Wall East,
+  Wall, Interior Wall, Zone 4, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  20.000, 0.000, 3.000,
+  20.000, 0.000, 0.000,
+  20.000, 8.000, 0.000,
+  20.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 4 Roof,
+  Roof, Roof, Zone 4, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  15.000, 8.000, 3.000,
+  15.000, 0.000, 3.000,
+  20.000, 0.000, 3.000,
+  20.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 4 Floor,
+  Floor, Floor, Zone 4, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  15.000, 0.000, 0.000,
+  15.000, 8.000, 0.000,
+  20.000, 8.000, 0.000,
+  20.000, 0.000, 0.000;
+
+FenestrationSurface:Detailed,
+  Zone 4 Window South, Window, Exterior Window, Zone 4 Wall South, ,
+  autocalculate, , 1.0,
+  4,                       !- Number of Vertices
+  16.000, 0.000, 2.500,
+  16.000, 0.000, 1.000,
+  19.000, 0.000, 1.000,
+  19.000, 0.000, 2.500;
+
+People,
+  Zone 4 People, Zone 4, Office Occupancy, People, 1, , , 0.30, autocalculate, Activity Level, 3.82E-8;
+Lights,
+  Zone 4 Lights, Zone 4, Office Lighting, Watts/Area, , 6, , 0.0, 0.42, 0.18, 1.0, General;
+ElectricEquipment,
+  Zone 4 Equipment, Zone 4, Server Equipment Sched, Watts/Area, , 60, , 0.0, 0.30, 0.0, General;
+ZoneInfiltration:DesignFlowRate,
+  Zone 4 Infiltration, Zone 4, Always On, Flow/Area, , 0.0003, , , 1.0, 0.0, 0.0, 0.0;
+
+DesignSpecification:OutdoorAir,
+  Zone 4 OA Spec, Flow/Person, 0.005, 0.0, 0.0, 0.0;
+Sizing:Zone,
+  Zone 4, SupplyAirTemperature, 13.0, 11.11, SupplyAirTemperature, 40.0, 11.11,
+  0.0085, 0.008, Zone 4 OA Spec, , , DesignDay;
+ThermostatSetpoint:DualSetpoint,
+  Zone 4 DualSP, Heating SP Sched, Zone 4 Cooling SP Sched;
+ZoneControl:Thermostat,
+  Zone 4 Thermostat, Zone 4, Control Type Sched, ThermostatSetpoint:DualSetpoint, Zone 4 DualSP;
+
+!-   ---- Zone 5: Reception ----
+Zone,
+  Zone 5, 0, 0, 0, 0, 1, 1, autocalculate, autocalculate;
+
+BuildingSurface:Detailed,
+  Zone 5 Wall South,
+  Wall, Exterior Wall, Zone 5, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  20.000, 0.000, 3.000,
+  20.000, 0.000, 0.000,
+  25.000, 0.000, 0.000,
+  25.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 5 Wall North,
+  Wall, Exterior Wall, Zone 5, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  25.000, 8.000, 3.000,
+  25.000, 8.000, 0.000,
+  20.000, 8.000, 0.000,
+  20.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 5 Wall West,
+  Wall, Interior Wall, Zone 5, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  20.000, 8.000, 3.000,
+  20.000, 8.000, 0.000,
+  20.000, 0.000, 0.000,
+  20.000, 0.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 5 Wall East,
+  Wall, Exterior Wall, Zone 5, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  25.000, 0.000, 3.000,
+  25.000, 0.000, 0.000,
+  25.000, 8.000, 0.000,
+  25.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 5 Roof,
+  Roof, Roof, Zone 5, ,
+  Outdoors, ,
+  SunExposed, WindExposed, autocalculate,
+  4,                       !- Number of Vertices
+  20.000, 8.000, 3.000,
+  20.000, 0.000, 3.000,
+  25.000, 0.000, 3.000,
+  25.000, 8.000, 3.000;
+
+BuildingSurface:Detailed,
+  Zone 5 Floor,
+  Floor, Floor, Zone 5, ,
+  Adiabatic, ,
+  NoSun, NoWind, autocalculate,
+  4,                       !- Number of Vertices
+  20.000, 0.000, 0.000,
+  20.000, 8.000, 0.000,
+  25.000, 8.000, 0.000,
+  25.000, 0.000, 0.000;
+
+FenestrationSurface:Detailed,
+  Zone 5 Window South, Window, Exterior Window, Zone 5 Wall South, ,
+  autocalculate, , 1.0,
+  4,                       !- Number of Vertices
+  21.000, 0.000, 2.500,
+  21.000, 0.000, 1.000,
+  24.000, 0.000, 1.000,
+  24.000, 0.000, 2.500;
+
+People,
+  Zone 5 People, Zone 5, Office Occupancy, People, 5, , , 0.30, autocalculate, Activity Level, 3.82E-8;
+Lights,
+  Zone 5 Lights, Zone 5, Office Lighting, Watts/Area, , 11, , 0.0, 0.42, 0.18, 1.0, General;
+ElectricEquipment,
+  Zone 5 Equipment, Zone 5, Office Equipment, Watts/Area, , 6, , 0.0, 0.30, 0.0, General;
+ZoneInfiltration:DesignFlowRate,
+  Zone 5 Infiltration, Zone 5, Always On, Flow/Area, , 0.0003, , , 1.0, 0.0, 0.0, 0.0;
+
+DesignSpecification:OutdoorAir,
+  Zone 5 OA Spec, Flow/Person, 0.01, 0.0, 0.0, 0.0;
+Sizing:Zone,
+  Zone 5, SupplyAirTemperature, 13.0, 11.11, SupplyAirTemperature, 40.0, 11.11,
+  0.0085, 0.008, Zone 5 OA Spec, , , DesignDay;
+ThermostatSetpoint:DualSetpoint,
+  Zone 5 DualSP, Heating SP Sched, Zone 5 Cooling SP Sched;
+ZoneControl:Thermostat,
+  Zone 5 Thermostat, Zone 5, Control Type Sched, ThermostatSetpoint:DualSetpoint, Zone 5 DualSP;
+
+!-   =======================  CO2 CONTAMINANT BALANCE  ======================
+ZoneAirContaminantBalance, Yes, Outdoor CO2 Schedule, No;
+
+!-   ====================  ZONE TERMINALS & CONNECTIONS  =====================
+!-   ConstantVolume:NoReheat terminals: EnergyPlus does NOT modulate them - your
+!-   Python driver overrides each one's mass flow (kg/s) every timestep via the
+!-   'AirTerminal:SingleDuct:ConstantVolume:NoReheat' / 'Mass Flow Rate' actuator
+!-   (key = terminal name). Maximum Air Flow Rate below is the per-zone kg/s ceiling
+!-   (entered as m3/s); set your commanded flow anywhere in [0, max].
+AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+  Zone 1 Air Terminal,        !- Name
+  Always On,               !- Availability Schedule Name
+  Zone 1 VAV Inlet Node,      !- Air Inlet Node Name (from zone splitter)
+  Zone 1 Supply Inlet Node,   !- Air Outlet Node Name (into zone)
+  0.5;          !- Maximum Air Flow Rate {m3/s}
+ZoneHVAC:AirDistributionUnit,
+  Zone 1 ADU, Zone 1 Supply Inlet Node, AirTerminal:SingleDuct:ConstantVolume:NoReheat, Zone 1 Air Terminal;
+ZoneHVAC:EquipmentList,
+  Zone 1 Equipment, SequentialLoad, ZoneHVAC:AirDistributionUnit, Zone 1 ADU, 1, 1, , ;
+ZoneHVAC:EquipmentConnections,
+  Zone 1, Zone 1 Equipment, Zone 1 Supply Inlet Node, , Zone 1 Air Node, Zone 1 Return Node;
+
+AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+  Zone 2 Air Terminal,        !- Name
+  Always On,               !- Availability Schedule Name
+  Zone 2 VAV Inlet Node,      !- Air Inlet Node Name (from zone splitter)
+  Zone 2 Supply Inlet Node,   !- Air Outlet Node Name (into zone)
+  0.35;          !- Maximum Air Flow Rate {m3/s}
+ZoneHVAC:AirDistributionUnit,
+  Zone 2 ADU, Zone 2 Supply Inlet Node, AirTerminal:SingleDuct:ConstantVolume:NoReheat, Zone 2 Air Terminal;
+ZoneHVAC:EquipmentList,
+  Zone 2 Equipment, SequentialLoad, ZoneHVAC:AirDistributionUnit, Zone 2 ADU, 1, 1, , ;
+ZoneHVAC:EquipmentConnections,
+  Zone 2, Zone 2 Equipment, Zone 2 Supply Inlet Node, , Zone 2 Air Node, Zone 2 Return Node;
+
+AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+  Zone 3 Air Terminal,        !- Name
+  Always On,               !- Availability Schedule Name
+  Zone 3 VAV Inlet Node,      !- Air Inlet Node Name (from zone splitter)
+  Zone 3 Supply Inlet Node,   !- Air Outlet Node Name (into zone)
+  0.55;          !- Maximum Air Flow Rate {m3/s}
+ZoneHVAC:AirDistributionUnit,
+  Zone 3 ADU, Zone 3 Supply Inlet Node, AirTerminal:SingleDuct:ConstantVolume:NoReheat, Zone 3 Air Terminal;
+ZoneHVAC:EquipmentList,
+  Zone 3 Equipment, SequentialLoad, ZoneHVAC:AirDistributionUnit, Zone 3 ADU, 1, 1, , ;
+ZoneHVAC:EquipmentConnections,
+  Zone 3, Zone 3 Equipment, Zone 3 Supply Inlet Node, , Zone 3 Air Node, Zone 3 Return Node;
+
+AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+  Zone 4 Air Terminal,        !- Name
+  Always On,               !- Availability Schedule Name
+  Zone 4 VAV Inlet Node,      !- Air Inlet Node Name (from zone splitter)
+  Zone 4 Supply Inlet Node,   !- Air Outlet Node Name (into zone)
+  0.6;          !- Maximum Air Flow Rate {m3/s}
+ZoneHVAC:AirDistributionUnit,
+  Zone 4 ADU, Zone 4 Supply Inlet Node, AirTerminal:SingleDuct:ConstantVolume:NoReheat, Zone 4 Air Terminal;
+ZoneHVAC:EquipmentList,
+  Zone 4 Equipment, SequentialLoad, ZoneHVAC:AirDistributionUnit, Zone 4 ADU, 1, 1, , ;
+ZoneHVAC:EquipmentConnections,
+  Zone 4, Zone 4 Equipment, Zone 4 Supply Inlet Node, , Zone 4 Air Node, Zone 4 Return Node;
+
+AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+  Zone 5 Air Terminal,        !- Name
+  Always On,               !- Availability Schedule Name
+  Zone 5 VAV Inlet Node,      !- Air Inlet Node Name (from zone splitter)
+  Zone 5 Supply Inlet Node,   !- Air Outlet Node Name (into zone)
+  0.35;          !- Maximum Air Flow Rate {m3/s}
+ZoneHVAC:AirDistributionUnit,
+  Zone 5 ADU, Zone 5 Supply Inlet Node, AirTerminal:SingleDuct:ConstantVolume:NoReheat, Zone 5 Air Terminal;
+ZoneHVAC:EquipmentList,
+  Zone 5 Equipment, SequentialLoad, ZoneHVAC:AirDistributionUnit, Zone 5 ADU, 1, 1, , ;
+ZoneHVAC:EquipmentConnections,
+  Zone 5, Zone 5 Equipment, Zone 5 Supply Inlet Node, , Zone 5 Air Node, Zone 5 Return Node;
+
+!-   ===========================  AIR LOOP (AHU)  ===========================
+AirLoopHVAC,
+  VAV Air Loop, ,            !- Name / Controller List Name
+  VAV Availability Managers, !- Availability Manager List Name
+  autosize,                  !- Design Supply Air Flow Rate
+  VAV Branch List, ,         !- Branch List Name / Connector List Name
+  VAV Supply Inlet Node,     !- Supply Side Inlet Node Name
+  VAV Return Air Node,       !- Demand Side Outlet Node Name
+  VAV Demand Inlet Node,     !- Demand Side Inlet Node Names
+  VAV Supply Outlet Node;    !- Supply Side Outlet Node Names
+
+BranchList, VAV Branch List, VAV Supply Branch;
+
+Branch,
+  VAV Supply Branch, ,
+  AirLoopHVAC:OutdoorAirSystem, VAV OA System, VAV Supply Inlet Node, OA Mixer Outlet Node,
+  CoilSystem:Cooling:DX, VAV DX Coil System, OA Mixer Outlet Node, DX Coil Outlet Node,
+  Fan:VariableVolume, VAV Supply Fan, DX Coil Outlet Node, VAV Supply Outlet Node;
+
+AvailabilityManager:Scheduled, VAV Avail Mgr, Always On;
+AvailabilityManagerAssignmentList, VAV Availability Managers, AvailabilityManager:Scheduled, VAV Avail Mgr;
+
+AirLoopHVAC:OutdoorAirSystem,
+  VAV OA System, VAV OA Controller List, VAV OA Equipment List;
+AirLoopHVAC:ControllerList,
+  VAV OA Controller List, Controller:OutdoorAir, VAV OA Controller;
+AirLoopHVAC:OutdoorAirSystem:EquipmentList,
+  VAV OA Equipment List, OutdoorAir:Mixer, VAV OA Mixer;
+
+OutdoorAir:Mixer,
+  VAV OA Mixer, OA Mixer Outlet Node, OA Inlet Node, Relief Air Node, VAV Supply Inlet Node;
+OutdoorAir:Node, OA Inlet Node, -1.0;
+
+Controller:OutdoorAir,
+  VAV OA Controller,        !- Name
+  Relief Air Node,          !- Relief Air Outlet Node Name
+  VAV Supply Inlet Node,    !- Return Air Node Name
+  OA Mixer Outlet Node,     !- Mixed Air Node Name
+  OA Inlet Node,            !- Actuator Node Name
+  autosize,                 !- Minimum Outdoor Air Flow Rate
+  autosize,                 !- Maximum Outdoor Air Flow Rate
+  NoEconomizer,             !- Economizer Control Type
+  ModulateFlow,             !- Economizer Control Action Type
+  , , , , ,                 !- (economizer limits)
+  NoLockout,                !- Lockout Type
+  FixedMinimum;             !- Minimum Limit Type
+
+CoilSystem:Cooling:DX,
+  VAV DX Coil System, Always On,
+  OA Mixer Outlet Node,     !- DX Cooling Coil System Inlet Node Name
+  DX Coil Outlet Node,      !- DX Cooling Coil System Outlet Node Name
+  DX Coil Outlet Node,      !- Sensor Node Name (where the SAT setpoint lives)
+  Coil:Cooling:DX:SingleSpeed, VAV DX Cooling Coil,
+  None, Yes, No;            !- Dehumidification Control / Run on Sensible / Latent
+
+Coil:Cooling:DX:SingleSpeed,
+  VAV DX Cooling Coil, Always On,
+  autosize,                 !- Gross Rated Total Cooling Capacity {W}
+  autosize,                 !- Gross Rated Sensible Heat Ratio
+  3.5,                      !- Gross Rated Cooling COP {W/W}
+  autosize,                 !- Rated Air Flow Rate {m3/s}
+  , ,                       !- 2017 / 2023 Rated Evap Fan Power Per Flow
+  OA Mixer Outlet Node,     !- Air Inlet Node Name
+  DX Coil Outlet Node,      !- Air Outlet Node Name
+  DX CapFT, DX CapFFF, DX EIRFT, DX EIRFFF, DX PLF;
+
+Curve:Biquadratic, DX CapFT, 0.942587793, 0.009543347, 0.000683770,
+  -0.011042676, 0.000005249, -0.000009720, 17.0, 22.0, 13.0, 46.0;
+Curve:Quadratic, DX CapFFF, 0.8, 0.2, 0.0, 0.5, 1.5;
+Curve:Biquadratic, DX EIRFT, 0.342414409, 0.034885008, -0.000623700,
+  0.004977216, 0.000437951, -0.000728028, 17.0, 22.0, 13.0, 46.0;
+Curve:Quadratic, DX EIRFFF, 1.1552, -0.1808, 0.0256, 0.5, 1.5;
+Curve:Quadratic, DX PLF, 0.85, 0.15, 0.0, 0.0, 1.0;
+
+Fan:VariableVolume,
+  VAV Supply Fan, Always On,
+  0.7, 600.0, autosize,     !- Efficiency / Pressure Rise {Pa} / Max Flow {m3/s}
+  Fraction, 0.25, ,         !- Min Flow Method / Fraction / Min Flow Rate
+  0.9, 1.0,                 !- Motor Efficiency / Motor In Airstream Fraction
+  0.0407, 0.08804, -0.07292, 0.9433, 0.0,  !- Fan Power Coefficients 1-5
+  DX Coil Outlet Node, VAV Supply Outlet Node, General;
+
+!-   SAT setpoint manager = INITIAL DEFAULT (13 C). Python overrides the setpoint at
+!-   'DX Coil Outlet Node' each timestep via the System Node Setpoint actuator.
+SetpointManager:Scheduled,
+  VAV SAT Manager, Temperature, SAT Setpoint Schedule, DX Coil Outlet Node;
+
+AirLoopHVAC:SupplyPath,
+  VAV Supply Path, VAV Demand Inlet Node, AirLoopHVAC:ZoneSplitter, VAV Zone Splitter;
+AirLoopHVAC:ZoneSplitter,
+  VAV Zone Splitter, VAV Demand Inlet Node,
+  Zone 1 VAV Inlet Node, Zone 2 VAV Inlet Node, Zone 3 VAV Inlet Node, Zone 4 VAV Inlet Node, Zone 5 VAV Inlet Node;
+
+AirLoopHVAC:ReturnPath,
+  VAV Return Path, VAV Return Air Node, AirLoopHVAC:ZoneMixer, VAV Zone Mixer;
+AirLoopHVAC:ZoneMixer,
+  VAV Zone Mixer, VAV Return Air Node,
+  Zone 1 Return Node, Zone 2 Return Node, Zone 3 Return Node, Zone 4 Return Node, Zone 5 Return Node;
+
+Sizing:System,
+  VAV Air Loop, Sensible, autosize, 0.3,
+  7.0, 0.008, 12.8, 0.008,  !- Preheat T/W, Precool T/W
+  13.0, 40.0,               !- Central Cooling / Heating Design Supply Air Temp
+  NonCoincident, No, No,    !- Zone Sum / 100% OA Cooling / Heating
+  0.0085, 0.008,            !- Central Cooling / Heating Supply Air Humidity Ratio
+  DesignDay, 0.0, , , ,     !- Cooling Supply Air Flow method
+  DesignDay, 0.0, , , , ,   !- Heating Supply Air Flow method
+  ZoneSum, 1.0,             !- System OA Method / Zone Max OA Fraction
+  CoolingDesignCapacity, autosize, , ,
+  HeatingDesignCapacity, autosize, , ,
+  OnOff;
+
+!-   ============================  OUTPUT  ==================================
+!-   IMPORTANT: the EnergyPlus Python API can only read a variable that is
+!-   requested below (get_variable_handle needs an Output:Variable to exist).
+!-   Actuators do NOT need any object - request handles directly in Python via
+!-   get_actuator_handle(component_type, control_type, key). To discover exact
+!-   handle strings for your build, call api.exchange.list_available_api_data_csv().
+Output:VariableDictionary, IDF;
+OutputControl:Table:Style, HTML;
+Output:Table:SummaryReports, AllSummary;
+
+!-   --- Zone states (controller inputs: T, humidity ratio, RH, CO2) ---
+Output:Variable, *, Zone Mean Air Temperature, Timestep;
+Output:Variable, *, Zone Air Humidity Ratio, Timestep;
+Output:Variable, *, Zone Air Relative Humidity, Timestep;
+Output:Variable, *, Zone Air CO2 Concentration, Timestep;
+
+!-   --- Thermostat setpoints (verify your per-zone setpoint writes) ---
+Output:Variable, *, Zone Thermostat Cooling Setpoint Temperature, Timestep;
+Output:Variable, *, Zone Thermostat Heating Setpoint Temperature, Timestep;
+
+!-   --- terminal / airflow (your commanded flow lands on the zone supply node) ---
+Output:Variable, *, System Node Mass Flow Rate, Timestep;
+Output:Variable, *, System Node Temperature, Timestep;
+Output:Variable, *, System Node Relative Humidity, Timestep;
+Output:Variable, *, System Node Humidity Ratio, Timestep;
+Output:Variable, *, System Node Setpoint Temperature, Timestep;
+Output:Variable, *, System Node CO2 Concentration, Timestep;
+
+!-   --- Outdoor conditions / OA flow ---
+Output:Variable, *, Site Outdoor Air Drybulb Temperature, Timestep;
+Output:Variable, *, Site Outdoor Air Humidity Ratio, Timestep;
+Output:Variable, *, Air System Outdoor Air Mass Flow Rate, Timestep;
+
+!-   --- Energy surrogates (fan + coil) ---
+Output:Variable, *, Fan Electricity Rate, Timestep;
+Output:Variable, *, Cooling Coil Electricity Rate, Timestep;
+Output:Variable, *, Cooling Coil Total Cooling Rate, Timestep;
+Output:Variable, *, Cooling Coil Sensible Cooling Rate, Timestep;
+Output:Variable, *, Cooling Coil Latent Cooling Rate, Timestep;
+
