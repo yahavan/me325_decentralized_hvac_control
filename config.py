@@ -24,4 +24,4 @@ for _z in ZONES:
 
 CO2_SETPOINT = 800.0     # ppm, central coordinator target
 OUTDOOR_CO2 = 400.0      # ppm
-SAT_FLOOR = 20.0         # degC, lowest allowed AHU supply-air temperature
+SAT_FLOOR = 10.0         # degC, lowest allowed AHU supply-air temperature
