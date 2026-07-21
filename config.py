@@ -8,15 +8,15 @@ RHO_AIR = 1.2  # kg/m3, converts terminal max flow (m3/s) to a kg/s ceiling
 # Python writes mass flow (kg/s) directly to each terminal; clamp to [0, max_mdot].
 ZONES = [
     dict(zone="Zone 1", terminal="Zone 1 Air Terminal", use="Open Office",
-         max_flow_m3s=0.50, cool_sp=24.0, heat_sp=18.0, rh_target=55.0, kp=0.15),
+         max_flow_m3s=0.50, cool_sp=24.0, heat_sp=18.0, rh_target=55.0, kp=0.15, ki=0.0075),
     dict(zone="Zone 2", terminal="Zone 2 Air Terminal", use="Private Offices",
-         max_flow_m3s=0.35, cool_sp=24.0, heat_sp=18.0, rh_target=55.0, kp=0.15),
+         max_flow_m3s=0.35, cool_sp=24.0, heat_sp=18.0, rh_target=55.0, kp=0.15, ki=0.0075),
     dict(zone="Zone 3", terminal="Zone 3 Air Terminal", use="Conference Room",
-         max_flow_m3s=0.55, cool_sp=24.0, heat_sp=18.0, rh_target=55.0, kp=0.20),
+         max_flow_m3s=0.55, cool_sp=23.0, heat_sp=18.0, rh_target=55.0, kp=0.20, ki=0.0100),
     dict(zone="Zone 4", terminal="Zone 4 Air Terminal", use="Server Room",
-         max_flow_m3s=0.60, cool_sp=24.0, heat_sp=18.0, rh_target=50.0, kp=0.25),
+         max_flow_m3s=0.60, cool_sp=21.0, heat_sp=18.0, rh_target=50.0, kp=0.25, ki=0.0125),
     dict(zone="Zone 5", terminal="Zone 5 Air Terminal", use="Reception",
-         max_flow_m3s=0.35, cool_sp=24.0, heat_sp=18.0, rh_target=55.0, kp=0.15),
+         max_flow_m3s=0.35, cool_sp=24.0, heat_sp=18.0, rh_target=55.0, kp=0.15, ki=0.0075),
 ]
 
 for _z in ZONES:
