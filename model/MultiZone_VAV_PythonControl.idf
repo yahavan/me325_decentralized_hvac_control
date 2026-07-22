@@ -9,7 +9,7 @@
 !-   Climate: Colombo, Sri Lanka (hot & humid). Requires a Colombo .epw at run time.
 !-   ==========================================================================
 
-Version, 25.2;
+Version, 26.1;
 
 SimulationControl,
   Yes,                     !- Do Zone Sizing Calculation

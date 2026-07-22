@@ -29,7 +29,7 @@ LOG = "out/control_log.csv"      # our own results file (always written)
 # Set this to your EnergyPlus install folder to let the "-r" flag find
 # ReadVarsESO (the folder containing the energyplus executable + PostProcess/).
 # Leave as None to skip EnergyPlus's CSV and rely on our self-logger instead.
-EPLUS_ROOT = None   # e.g. r"C:\EnergyPlusV25-2-0"
+EPLUS_ROOT = r"C:\EnergyPlusV26-1-0"   # EnergyPlus V26.1.0 installed
 
 # Map zone name -> controller class. Every zone has its own file.
 CONTROLLER_CLASSES = {
@@ -178,7 +178,7 @@ def main():
     args = ["-w", EPW, "-d", OUTDIR, IDF]
     if EPLUS_ROOT:
         # Lets the "-r" post-process find ReadVarsESO when running via the C API.
-        api.runtime.set_energyplus_root_directory(state, EPLUS_ROOT)
+        api.runtime._set_energyplus_root_directory(state, EPLUS_ROOT)
         args = ["-r"] + args   # also emit EnergyPlus's native eplusout.csv
 
     try:
