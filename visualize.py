@@ -20,7 +20,7 @@ import numpy as np
 
 # ─────────────────────────── CONFIG ───────────────────────────
 LOG_PATH      = os.path.join("out", "control_log.csv")
-MONTH_TO_PLOT = 1   # 1 = January … 12 = December
+MONTH_TO_PLOT = 3   # 1 = January … 12 = December
 
 # Colour palette – one distinct colour per zone
 ZONE_COLOURS = {

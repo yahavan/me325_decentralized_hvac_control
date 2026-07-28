@@ -14,6 +14,7 @@ from pyenergyplus.api import EnergyPlusAPI
 
 from config import ZONES
 from controllers.ahu import AHUCoordinator
+from occupancy import build_occupancy_models
 from controllers.zone1 import Zone1Controller
 from controllers.zone2 import Zone2Controller
 from controllers.zone3 import Zone3Controller
@@ -54,6 +55,8 @@ class Orchestrator:
         self.h = {}
         self.controllers = [build_controller(z) for z in ZONES]
         self.ahu = AHUCoordinator(ZONES)
+        self.occ_models = build_occupancy_models(ZONES)   # stochastic occupancy
+        self._occ_counts = [0.0] * len(ZONES)             # last computed counts
         self._logf = None
         self._log = None
 
@@ -83,13 +86,16 @@ class Orchestrator:
             self.h[f"csp:{k}"]  = ex.get_actuator_handle(
                 st, "Zone Temperature Control", "Cooling Setpoint", k)
 
+        # People actuators are NOT used — EnergyPlus drives occupancy from
+        # its own IDF schedule. We only mirror it in Python for CSV logging.
+
         missing = [name for name, hv in self.h.items() if hv == -1]
         if missing:
             print("\n[FATAL] Unresolved handles (look them up in "
                   "available_api_data.csv): " + ", ".join(missing) + "\n")
             self.failed = True
             try:
-                self.api.runtime.stop_simulation(self.state)  # clean stop, no spam
+                self.api.runtime.stop_simulation(self.state)
             except Exception:
                 pass
             return
@@ -105,7 +111,7 @@ class Orchestrator:
         for z in ZONES:
             k = z["zone"].replace(" ", "")
             cols += [f"{k}_T", f"{k}_w", f"{k}_rh", f"{k}_co2",
-                     f"{k}_mdot_cmd", f"{k}_coolSP_cmd"]
+                     f"{k}_mdot_cmd", f"{k}_coolSP_cmd", f"{k}_occ"]
         cols += ["AHU_SAT_cmd", "AHU_OA_cmd"]
         self._log.writerow(cols)
 
@@ -114,9 +120,10 @@ class Orchestrator:
         stamp = f"{ex.month(st):02d}-{ex.day_of_month(st):02d} " \
                 f"{ex.hour(st):02d}:{ex.minutes(st):02d}"
         row = [stamp, round(ex.current_sim_time(st), 4)]
-        for m, req in zip(meas_all, requests):
+        for (m, req), occ in zip(zip(meas_all, requests), self._occ_counts):
             row += [round(m["T"], 3), round(m["w"], 5), round(m["rh"], 2),
-                    round(m["co2"], 1), round(req["mdot"], 4), req["cool_sp"]]
+                    round(m["co2"], 1), round(req["mdot"], 4), req["cool_sp"],
+                    round(occ, 2)]
         row += [round(cmd["sat_sp"], 3), round(cmd["oa_flow"], 4)]
         self._log.writerow(row)
 
@@ -137,7 +144,15 @@ class Orchestrator:
         if ex.warmup_flag(st):
             return
 
-        dt = ex.system_time_step(st) * 3600.0  # hours -> seconds (verify units for your build)
+        dt = ex.system_time_step(st) * 3600.0  # hours -> seconds
+
+        # 0) OCCUPANCY — mirror the IDF schedule for logging (no actuator write)
+        hour       = ex.hour(st) + ex.minutes(st) / 60.0
+        ep_dow     = ex.day_of_week(st)   # 1=Sun, 2=Mon … 7=Sat (EnergyPlus)
+        for i, (occ_model, z) in enumerate(zip(self.occ_models, ZONES)):
+            self._occ_counts[i] = occ_model.step(hour, ep_dow)
+
+        is_weekday = 2 <= ep_dow <= 6   # EnergyPlus: 1=Sun, 2=Mon … 6=Fri, 7=Sat
 
         # 1) READ + 2) LOCAL CONTROL (decentralised: each gets only its own data)
         requests = []
@@ -151,7 +166,7 @@ class Orchestrator:
                 co2=ex.get_variable_value(st, self.h[f"co2:{k}"]),
             )
             meas_all.append(meas)
-            requests.append(ctrl.step(meas, dt))
+            requests.append(ctrl.step(meas, dt, hour=hour, is_weekday=is_weekday))
 
         # 3) CENTRAL COORDINATION
         cmd = self.ahu.coordinate(requests)

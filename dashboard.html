@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ME325 Decentralised HVAC Control — Live Dashboard</title>
+<meta name="description" content="Interactive real-time playback dashboard for multi-zone VAV building simulation with decentralised PI controllers and EKF state estimation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #080c14; --surface: rgba(255,255,255,0.04); --surface-hover: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08); --border-bright: rgba(255,255,255,0.14);
+  --text: #e4e8f1; --text-dim: #8892a4; --text-bright: #ffffff;
+  --green: #4ade80; --amber: #fbbf24; --red: #f87171;
+  --z1: #4FC3F7; --z2: #A8D5A2; --z3: #FFB74D; --z4: #CE93D8; --z5: #F48FB1;
+  --glass-bg: rgba(12,18,30,0.72); --glass-border: rgba(255,255,255,0.10);
+  --glass-blur: 18px; --radius: 14px; --radius-sm: 8px;
+  --shadow: 0 4px 30px rgba(0,0,0,0.45);
+  --transition: 0.3s cubic-bezier(.4,0,.2,1);
+}
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif; background: var(--bg);
+  color: var(--text); min-height: 100vh; line-height: 1.5; overflow-x: hidden;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(79,195,247,0.06), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(206,147,216,0.05), transparent),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(168,213,162,0.03), transparent);
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+.container { max-width: 1480px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+/* ═══ GLASS ═══ */
+.glass {
+  background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border); border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.glass:hover {
+  transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0,0,0,0.55);
+  border-color: var(--border-bright);
+}
+
+/* ═══ HEADER ═══ */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8,12,20,0.85); backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border); padding: 0 24px;
+}
+.header-inner {
+  max-width: 1480px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px; gap: 16px; flex-wrap: wrap;
+}
+.logo-group { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--z1), var(--z4)); border-radius: 10px; font-size: 20px;
+}
+.logo-text { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--text-bright); }
+.logo-sub { font-size: 0.72rem; color: var(--text-dim); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
+.header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+/* ═══ TRANSPORT BAR ═══ */
+.transport {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 999px; padding: 5px 14px;
+}
+.transport button {
+  background: none; border: none; color: var(--text); cursor: pointer;
+  font-size: 1.1rem; padding: 4px 6px; border-radius: 6px;
+  transition: background 0.2s, color 0.2s; display: flex; align-items: center; justify-content: center;
+}
+.transport button:hover { background: rgba(255,255,255,0.1); color: var(--text-bright); }
+.transport button.active { color: var(--green); }
+.speed-select {
+  background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+  color: var(--text-bright); font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; cursor: pointer;
+}
+.speed-select option { background: #1a1d27; }
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+.pulse-dot.paused { background: var(--amber); animation: none; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.5)} 50%{box-shadow:0 0 0 6px rgba(74,222,128,0)} }
+.clock-text { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--text); font-weight: 500; white-space: nowrap; }
+
+/* ═══ PROGRESS BAR ═══ */
+.progress-wrap {
+  width: 100%; padding: 6px 0; cursor: pointer; position: relative;
+}
+.progress-track {
+  width: 100%; height: 6px; background: rgba(255,255,255,0.06);
+  border-radius: 3px; overflow: hidden; position: relative;
+}
+.progress-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--z1), var(--z4));
+  transition: width 0.15s linear;
+}
+.progress-wrap:hover .progress-track { height: 10px; }
+.progress-labels {
+  display: flex; justify-content: space-between; margin-top: 4px;
+  font-size: 0.65rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+}
+
+/* ═══ LOADING OVERLAY ═══ */
+.loading-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(8,12,20,0.95); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 20px;
+  transition: opacity 0.5s;
+}
+.loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.loading-spinner {
+  width: 48px; height: 48px; border: 3px solid var(--border);
+  border-top-color: var(--z1); border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 1rem; color: var(--text-dim); }
+.loading-sub { font-size: 0.78rem; color: var(--text-dim); opacity: 0.6; }
+
+/* ═══ FILE DROP ZONE ═══ */
+.file-drop {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(8,12,20,0.95);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+}
+.file-drop.hidden { display: none; }
+.drop-area {
+  width: 500px; max-width: 90%; padding: 60px 40px;
+  border: 2px dashed var(--border-bright); border-radius: 20px;
+  text-align: center; cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.drop-area:hover, .drop-area.drag-over {
+  border-color: var(--z1); background: rgba(79,195,247,0.05);
+}
+.drop-icon { font-size: 3rem; margin-bottom: 16px; }
+.drop-title { font-size: 1.2rem; font-weight: 700; color: var(--text-bright); margin-bottom: 8px; }
+.drop-sub { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+.drop-sub code { background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+.file-input { display: none; }
+.or-text { color: var(--text-dim); font-size: 0.82rem; margin: 8px 0; }
+.auto-load-btn {
+  background: linear-gradient(135deg, var(--z1), var(--z4));
+  border: none; color: #000; font-weight: 700; font-size: 0.85rem;
+  padding: 10px 28px; border-radius: 10px; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: transform 0.2s, box-shadow 0.2s;
+}
+.auto-load-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79,195,247,0.3); }
+
+/* ═══ SECTIONS ═══ */
+.dashboard { padding: 10px 0 60px; }
+.section-title {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--text-dim); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::before { content: ''; width: 3px; height: 14px; border-radius: 2px; background: var(--z1); }
+.section { margin-bottom: 24px; }
+
+/* ═══ ZONE KPI CARDS ═══ */
+.zone-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.zone-card { padding: 0; overflow: hidden; }
+.zone-accent { height: 4px; width: 100%; }
+.zone-card-body { padding: 14px 16px 16px; }
+.zone-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.zone-name { font-weight: 700; font-size: 0.88rem; }
+.zone-use { font-size: 0.68rem; color: var(--text-dim); font-weight: 500; }
+.status-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+.status-ok { background: var(--green); box-shadow: 0 0 8px rgba(74,222,128,0.5); }
+.status-warn { background: var(--amber); box-shadow: 0 0 8px rgba(251,191,36,0.5); }
+.status-crit { background: var(--red); box-shadow: 0 0 8px rgba(248,113,113,0.5); }
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.kpi-item { background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); padding: 7px 9px; }
+.kpi-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-weight: 600; margin-bottom: 1px; }
+.kpi-value { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 600; color: var(--text-bright); }
+.kpi-unit { font-size: 0.68rem; color: var(--text-dim); font-weight: 400; }
+
+/* ═══ ZONE SELECTOR ═══ */
+.zone-select {
+  background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+  color: var(--text-bright); font-family: 'Inter', sans-serif;
+  font-size: 0.72rem; font-weight: 500; padding: 4px 10px; border-radius: 8px; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238892a4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center; padding-right: 24px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.zone-select:hover { border-color: var(--border-bright); background: rgba(255,255,255,0.09); }
+.zone-select:focus { outline: none; border-color: var(--z1); }
+.zone-select option { background: #1a1d27; color: var(--text); }
+
+/* ═══ AHU ROW ═══ */
+.ahu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.ahu-card { padding: 18px; text-align: center; }
+.ahu-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); font-weight: 600; margin-bottom: 6px; }
+.ahu-value { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: var(--text-bright); line-height: 1.2; }
+.ahu-sub { font-size: 0.72rem; color: var(--text-dim); margin-top: 2px; }
+.gauge-track { width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-top: 10px; overflow: hidden; }
+.gauge-fill { height: 100%; border-radius: 3px; transition: width 0.4s cubic-bezier(.4,0,.2,1), background 0.4s; }
+
+/* ═══ CHARTS ═══ */
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.chart-card { padding: 18px; }
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.chart-title { font-weight: 700; font-size: 0.88rem; color: var(--text-bright); }
+.chart-wrap { position: relative; height: 260px; }
+.chart-wrap canvas { width: 100% !important; height: 100% !important; }
+
+/* ═══ AIRFLOW BARS ═══ */
+.airflow-bars { display: flex; flex-direction: column; gap: 8px; }
+.airflow-row { display: flex; align-items: center; gap: 10px; }
+.airflow-label { font-size: 0.72rem; font-weight: 600; color: var(--text-dim); width: 28px; flex-shrink: 0; }
+.airflow-track {
+  flex: 1; height: 20px; background: rgba(255,255,255,0.04);
+  border-radius: 6px; overflow: hidden; position: relative;
+}
+.airflow-fill {
+  height: 100%; border-radius: 6px; transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  display: flex; align-items: center; justify-content: flex-end; padding-right: 6px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600;
+  color: rgba(0,0,0,0.7); min-width: 28px;
+}
+.airflow-max {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  color: var(--text-dim); width: 52px; text-align: right; flex-shrink: 0;
+}
+
+/* ═══ CONFIG TABLE ═══ */
+.table-wrap { overflow-x: auto; border-radius: var(--radius); scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
+.config-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+.config-table th {
+  text-align: left; padding: 10px 12px; font-size: 0.66rem; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-dim); font-weight: 700;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.config-table td { padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); white-space: nowrap; vertical-align: middle; }
+.config-table tr:hover td { background: rgba(255,255,255,0.02); }
+.config-table .mono-cell { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.badge-ok { background: rgba(74,222,128,0.15); color: var(--green); }
+.badge-warn { background: rgba(251,191,36,0.15); color: var(--amber); }
+.badge-crit { background: rgba(248,113,113,0.15); color: var(--red); }
+.zone-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+/* ═══ FOOTER ═══ */
+.footer { text-align: center; padding: 20px 0; font-size: 0.7rem; color: var(--text-dim); border-top: 1px solid var(--border); margin-top: 16px; }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 1280px) { .zone-grid { grid-template-columns: repeat(3, 1fr); } .chart-row { grid-template-columns: 1fr; } .ahu-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 960px) { .zone-grid { grid-template-columns: repeat(2, 1fr); } .ahu-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  html { font-size: 14px; }
+  .zone-grid { grid-template-columns: 1fr; }
+  .header-inner { height: auto; padding: 12px 0; flex-wrap: wrap; justify-content: center; }
+  .container { padding: 0 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ FILE DROP ZONE ═══ -->
+<div class="file-drop" id="fileDrop">
+  <div class="drop-area" id="dropArea">
+    <div class="drop-icon">📂</div>
+    <div class="drop-title">Load Simulation Data</div>
+    <div class="drop-sub">
+      Drag &amp; drop your <code>control_log.csv</code> here<br>
+      or click to browse
+    </div>
+    <input type="file" class="file-input" id="fileInput" accept=".csv">
+  </div>
+  <div class="or-text">— or —</div>
+  <button class="auto-load-btn" id="autoLoadBtn">
+    Auto-load from out/control_log.csv
+  </button>
+  <div class="drop-sub" style="margin-top:8px; opacity:0.5;">
+    Auto-load works when served via <code>python -m http.server</code> from the project root
+  </div>
+</div>
+
+<!-- ═══ LOADING OVERLAY ═══ -->
+<div class="loading-overlay hidden" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Parsing simulation data…</div>
+  <div class="loading-sub" id="loadingStatus">0 rows loaded</div>
+</div>
+
+<!-- ═══ HEADER ═══ -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <div class="logo-group">
+      <div class="logo-icon">❄️</div>
+      <div>
+        <div class="logo-text">ME325 HVAC Control</div>
+        <div class="logo-sub">Decentralised Multi-Zone VAV · EnergyPlus</div>
+      </div>
+    </div>
+    <div class="header-controls">
+      <div class="transport" id="transport">
+        <button id="btnRestart" title="Restart">⏮</button>
+        <button id="btnPlay" title="Play / Pause" class="active">▶</button>
+        <button id="btnStepFwd" title="Step +1h">⏭</button>
+        <select class="speed-select" id="speedSelect">
+          <option value="1">1×</option>
+          <option value="5">5×</option>
+          <option value="10">10×</option>
+          <option value="25" selected>25×</option>
+          <option value="50">50×</option>
+          <option value="100">100×</option>
+          <option value="250">250×</option>
+          <option value="500">500×</option>
+        </select>
+        <div class="pulse-dot" id="pulseDot"></div>
+        <span class="clock-text" id="simClock">Jan 01 — 00:00</span>
+      </div>
+    </div>
+  </div>
+  <!-- Scrubber -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0"></div></div>
+    <div class="progress-labels"><span id="progStart">Jan 01</span><span id="progPct">0.0%</span><span id="progEnd">Dec 31</span></div>
+  </div>
+</header>
+
+<!-- ═══ DASHBOARD ═══ -->
+<main class="dashboard container" id="dashMain" style="display:none;">
+
+  <!-- Zone KPI Cards -->
+  <section class="section">
+    <div class="section-title">Zone Overview</div>
+    <div class="zone-grid" id="zoneGrid"></div>
+  </section>
+
+  <!-- AHU -->
+  <section class="section">
+    <div class="section-title">AHU Coordinator</div>
+    <div class="ahu-grid">
+      <div class="glass ahu-card">
+        <div class="ahu-label">Supply Air Temp Setpoint</div>
+        <div class="ahu-value" id="ahuSATval">--</div>
+        <div class="ahu-sub">°C (floor 10°C)</div>
+        <div class="gauge-track"><div class="gauge-fill" id="ahuSATgauge" style="width:0; background: var(--z1);"></div></div>
+      </div>
+      <div class="glass ahu-card">
+        <div class="ahu-label">Outdoor Air Mass Flow</div>
+        <div class="ahu-value" id="ahuOAval">--</div>
+        <div class="ahu-sub" id="ahuOAsub">kg/s</div>
+        <div class="gauge-track"><div class="gauge-fill" id="ahuOAgauge" style="width:0; background: var(--z2);"></div></div>
+      </div>
+      <div class="glass ahu-card">
+        <div class="ahu-label">OA Ratio (Mixed)</div>
+        <div class="ahu-value" id="ahuOARval">--</div>
+        <div class="ahu-sub">% of total supply air</div>
+        <div class="gauge-track"><div class="gauge-fill" id="ahuOARgauge" style="width:0; background: var(--z3);"></div></div>
+      </div>
+      <div class="glass ahu-card">
+        <div class="ahu-label">Worst-Zone CO₂</div>
+        <div class="ahu-value" id="ahuCO2val">--</div>
+        <div class="ahu-sub">ppm (ASHRAE limit 1000)</div>
+        <div class="gauge-track"><div class="gauge-fill" id="ahuCO2gauge" style="width:0;"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Charts: Temp + RH -->
+  <section class="section">
+    <div class="section-title">Temperature &amp; Humidity</div>
+    <div class="chart-row">
+      <div class="glass chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Zone Temperatures (°C)</div>
+          <select class="zone-select" id="selTemp"></select>
+        </div>
+        <div class="chart-wrap"><canvas id="chartTemp"></canvas></div>
+      </div>
+      <div class="glass chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Relative Humidity (%)</div>
+          <select class="zone-select" id="selRH"></select>
+        </div>
+        <div class="chart-wrap"><canvas id="chartRH"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Charts: CO2 + Airflow -->
+  <section class="section">
+    <div class="section-title">CO₂ &amp; Airflow</div>
+    <div class="chart-row">
+      <div class="glass chart-card">
+        <div class="chart-header">
+          <div class="chart-title">CO₂ Concentration (ppm)</div>
+          <select class="zone-select" id="selCO2"></select>
+        </div>
+        <div class="chart-wrap"><canvas id="chartCO2"></canvas></div>
+      </div>
+      <div class="glass chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Zone Airflow (kg/s)</div>
+          <select class="zone-select" id="selAirflow"></select>
+        </div>
+        <div class="chart-wrap"><canvas id="chartAirflow"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Config Table -->
+  <section class="section">
+    <div class="section-title">Controller Configuration</div>
+    <div class="glass" style="padding:0; overflow:hidden;">
+      <div class="table-wrap">
+        <table class="config-table" id="configTable">
+          <thead><tr>
+            <th>Zone</th><th>Use</th><th>Controller</th><th>Estimator</th>
+            <th>Cool SP</th><th>Heat SP</th><th>RH Target</th><th>Kp</th><th>Ki</th>
+            <th>Max Flow</th><th>Current T</th><th>Airflow</th><th>CO₂</th><th>Status</th>
+          </tr></thead>
+          <tbody id="configBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer container" id="footerEl" style="display:none;">
+  ME325 Decentralised HVAC Control — University of Moratuwa — EnergyPlus Annual Simulation Playback
+</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   ZONE METADATA (from config.py)
+   ═══════════════════════════════════════ */
+const ZONES = [
+  { key:'Zone1', name:'Zone 1', use:'Open Office',     color:'#4FC3F7', coolSP:24, heatSP:18, rhTarget:55, kp:0.15, ki:0.008, maxFlowM3s:0.50, maxMdot:0.60 },
+  { key:'Zone2', name:'Zone 2', use:'Private Offices',  color:'#A8D5A2', coolSP:24, heatSP:18, rhTarget:55, kp:0.15, ki:0.008, maxFlowM3s:0.35, maxMdot:0.42 },
+  { key:'Zone3', name:'Zone 3', use:'Conference Room',   color:'#FFB74D', coolSP:24, heatSP:18, rhTarget:55, kp:0.20, ki:0.010, maxFlowM3s:0.55, maxMdot:0.66 },
+  { key:'Zone4', name:'Zone 4', use:'Server Room',       color:'#CE93D8', coolSP:24, heatSP:18, rhTarget:50, kp:0.25, ki:0.012, maxFlowM3s:0.60, maxMdot:0.72 },
+  { key:'Zone5', name:'Zone 5', use:'Reception',          color:'#F48FB1', coolSP:24, heatSP:18, rhTarget:55, kp:0.15, ki:0.008, maxFlowM3s:0.35, maxMdot:0.42 },
+];
+const HISTORY_LEN = 144; // 144 steps × 10min = 24h rolling window on charts
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+/* ═══ STATE ═══ */
+let csvData = [];       // parsed rows
+let cursor = 0;         // current row index
+let playing = false;
+let speed = 25;         // steps per tick
+let tickTimer = null;
+const history = { labels:[], temp:[[],[],[],[],[]], rh:[[],[],[],[],[]], co2:[[],[],[],[],[]], mdot:[[],[],[],[],[]] };
+
+// Zone filter state per chart: 'all' or zone index 0-4
+const chartFilter = { temp:'all', rh:'all', co2:'all', airflow:'all' };
+
+/* ═══ CSV PARSING ═══ */
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const header = lines[0].split(',').map(s => s.trim());
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = lines[i].split(',');
+    if (vals.length < header.length) continue;
+    const row = {};
+    for (let j = 0; j < header.length; j++) {
+      const v = vals[j].trim();
+      row[header[j]] = j === 0 ? v : parseFloat(v);
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+
+/* ═══ FILE LOADING ═══ */
+const fileDrop = document.getElementById('fileDrop');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const dropArea = document.getElementById('dropArea');
+const fileInput = document.getElementById('fileInput');
+
+dropArea.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.classList.add('drag-over'); });
+dropArea.addEventListener('dragleave', () => dropArea.classList.remove('drag-over'));
+dropArea.addEventListener('drop', e => {
+  e.preventDefault(); dropArea.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+document.getElementById('autoLoadBtn').addEventListener('click', async () => {
+  fileDrop.classList.add('hidden');
+  loadingOverlay.classList.remove('hidden');
+  document.getElementById('loadingStatus').textContent = 'Fetching out/control_log.csv…';
+  try {
+    const res = await fetch('out/control_log.csv');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+    processCSVText(text);
+  } catch (err) {
+    alert('Could not auto-load. Make sure you are serving from the project root.\n\n' + err.message);
+    loadingOverlay.classList.add('hidden');
+    fileDrop.classList.remove('hidden');
+  }
+});
+
+function loadFile(file) {
+  fileDrop.classList.add('hidden');
+  loadingOverlay.classList.remove('hidden');
+  const reader = new FileReader();
+  reader.onprogress = e => {
+    if (e.lengthComputable) document.getElementById('loadingStatus').textContent = `Reading… ${(e.loaded/1e6).toFixed(1)} MB`;
+  };
+  reader.onload = e => processCSVText(e.target.result);
+  reader.readAsText(file);
+}
+
+function processCSVText(text) {
+  document.getElementById('loadingStatus').textContent = 'Parsing CSV…';
+  setTimeout(() => {
+    csvData = parseCSV(text);
+    document.getElementById('loadingStatus').textContent = `${csvData.length.toLocaleString()} rows parsed. Starting…`;
+    setTimeout(() => {
+      loadingOverlay.classList.add('hidden');
+      document.getElementById('dashMain').style.display = '';
+      document.getElementById('footerEl').style.display = '';
+      initDashboard();
+    }, 400);
+  }, 50);
+}
+
+/* ═══ DASHBOARD INIT ═══ */
+function initDashboard() {
+  buildZoneCards();
+  buildAirflowBars();
+  buildZoneSelectors();
+  initCharts();
+  cursor = 0;
+  playing = true;
+  updatePlayBtn();
+  render();
+  startTicker();
+}
+
+/* ═══ TRANSPORT CONTROLS ═══ */
+document.getElementById('btnPlay').addEventListener('click', () => { playing = !playing; updatePlayBtn(); if (playing) startTicker(); else stopTicker(); });
+document.getElementById('btnRestart').addEventListener('click', () => { cursor = 0; clearHistory(); render(); });
+document.getElementById('btnStepFwd').addEventListener('click', () => {
+  // Jump +1 hour (6 steps at 10min)
+  cursor = Math.min(cursor + 6, csvData.length - 1); render();
+});
+document.getElementById('speedSelect').addEventListener('change', e => { speed = parseInt(e.target.value); });
+document.getElementById('progressWrap').addEventListener('click', e => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  cursor = Math.round(pct * (csvData.length - 1));
+  cursor = Math.max(0, Math.min(cursor, csvData.length - 1));
+  clearHistory();
+  // Pre-fill history with preceding rows
+  const start = Math.max(0, cursor - HISTORY_LEN);
+  for (let i = start; i <= cursor; i++) pushHistory(csvData[i]);
+  render();
+});
+
+function updatePlayBtn() {
+  const btn = document.getElementById('btnPlay');
+  btn.textContent = playing ? '⏸' : '▶';
+  btn.classList.toggle('active', playing);
+  document.getElementById('pulseDot').classList.toggle('paused', !playing);
+}
+function startTicker() { stopTicker(); tickTimer = setInterval(tick, 50); }
+function stopTicker() { if (tickTimer) { clearInterval(tickTimer); tickTimer = null; } }
+function tick() {
+  if (!playing || cursor >= csvData.length - 1) return;
+  const steps = Math.max(1, Math.round(speed / 20)); // steps per 50ms tick
+  for (let i = 0; i < steps && cursor < csvData.length - 1; i++) {
+    cursor++;
+    pushHistory(csvData[cursor]);
+  }
+  render();
+  if (cursor >= csvData.length - 1) { playing = false; updatePlayBtn(); }
+}
+function clearHistory() {
+  history.labels = [];
+  for (let i = 0; i < 5; i++) { history.temp[i] = []; history.rh[i] = []; history.co2[i] = []; history.mdot[i] = []; }
+}
+function pushHistory(row) {
+  history.labels.push(row.datetime || '');
+  for (let i = 0; i < 5; i++) {
+    const k = ZONES[i].key;
+    history.temp[i].push(row[k+'_T']);
+    history.rh[i].push(row[k+'_rh']);
+    history.co2[i].push(row[k+'_co2']);
+    history.mdot[i].push(row[k+'_mdot_cmd']);
+  }
+  if (history.labels.length > HISTORY_LEN) {
+    history.labels.shift();
+    for (let i = 0; i < 5; i++) { history.temp[i].shift(); history.rh[i].shift(); history.co2[i].shift(); history.mdot[i].shift(); }
+  }
+}
+
+/* ═══ BUILD DOM ═══ */
+function buildZoneCards() {
+  const grid = document.getElementById('zoneGrid');
+  grid.innerHTML = ZONES.map((z,i) => `
+    <div class="glass zone-card">
+      <div class="zone-accent" style="background:${z.color}"></div>
+      <div class="zone-card-body">
+        <div class="zone-header">
+          <div><div class="zone-name" style="color:${z.color}">${z.name}</div><div class="zone-use">${z.use}</div></div>
+          <div class="status-dot status-ok" id="zstatus${i}"></div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-item"><div class="kpi-label">Temperature</div><div class="kpi-value"><span id="zt${i}">--</span> <span class="kpi-unit">°C</span></div></div>
+          <div class="kpi-item"><div class="kpi-label">Humidity</div><div class="kpi-value"><span id="zrh${i}">--</span> <span class="kpi-unit">%</span></div></div>
+          <div class="kpi-item"><div class="kpi-label">CO₂</div><div class="kpi-value"><span id="zco2${i}">--</span> <span class="kpi-unit">ppm</span></div></div>
+          <div class="kpi-item"><div class="kpi-label">Airflow</div><div class="kpi-value"><span id="zmf${i}">--</span> <span class="kpi-unit">kg/s</span></div></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function buildAirflowBars() {}
+
+function buildZoneSelectors() {
+  const selIds = ['selTemp','selRH','selCO2','selAirflow'];
+  const filterKeys = ['temp','rh','co2','airflow'];
+  selIds.forEach((id, idx) => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = '<option value="all">All Zones</option>' +
+      ZONES.map((z,i) => `<option value="${i}" style="color:${z.color}">${z.name} — ${z.use}</option>`).join('');
+    sel.addEventListener('change', () => {
+      chartFilter[filterKeys[idx]] = sel.value === 'all' ? 'all' : parseInt(sel.value);
+    });
+  });
+}
+
+/* ═══ CHART.JS ═══ */
+const chartOpts = {
+  responsive: true, maintainAspectRatio: false,
+  animation: false,
+  plugins: {
+    legend: { labels: { color:'#8892a4', font:{family:'Inter',size:11}, boxWidth:10, padding:10, usePointStyle:true, pointStyle:'circle' } },
+    tooltip: { backgroundColor:'rgba(12,18,30,0.92)', titleColor:'#e4e8f1', bodyColor:'#8892a4', borderColor:'rgba(255,255,255,0.1)', borderWidth:1, cornerRadius:8, padding:10,
+      titleFont:{family:'Inter',weight:'600'}, bodyFont:{family:'JetBrains Mono',size:12} }
+  },
+  scales: {
+    x: { ticks:{color:'#5a6478', font:{family:'JetBrains Mono',size:9}, maxTicksLimit:10, maxRotation:0}, grid:{color:'rgba(255,255,255,0.04)'} },
+    y: { ticks:{color:'#5a6478', font:{family:'JetBrains Mono',size:10}}, grid:{color:'rgba(255,255,255,0.04)'} },
+  }
+};
+
+let chartTemp, chartRH, chartCO2, chartAirflow;
+
+function makeDS(dataArr) {
+  return ZONES.map((z,i) => ({
+    label:z.name, data:dataArr[i], borderColor:z.color, borderWidth:1.5,
+    pointRadius:0, tension:0.3, fill:false,
+  }));
+}
+function initCharts() {
+  chartTemp = new Chart(document.getElementById('chartTemp').getContext('2d'), {
+    type:'line', data:{ labels:[], datasets:makeDS(history.temp) },
+    options: { ...chartOpts, scales: { ...chartOpts.scales, y:{ ...chartOpts.scales.y, suggestedMin:16, suggestedMax:32 } },
+      plugins: { ...chartOpts.plugins, annotation: {} }
+    }
+  });
+  chartRH = new Chart(document.getElementById('chartRH').getContext('2d'), {
+    type:'line', data:{ labels:[], datasets:makeDS(history.rh) },
+    options: { ...chartOpts, scales: { ...chartOpts.scales, y:{ ...chartOpts.scales.y, suggestedMin:30, suggestedMax:90 } } }
+  });
+  chartCO2 = new Chart(document.getElementById('chartCO2').getContext('2d'), {
+    type:'line', data:{ labels:[], datasets:[
+      ...makeDS(history.co2),
+      { label:'ASHRAE 1000', data:[], borderColor:'#f87171', borderWidth:2, borderDash:[8,4], pointRadius:0, fill:false }
+    ]},
+    options: { ...chartOpts, scales: { ...chartOpts.scales, y:{ ...chartOpts.scales.y, suggestedMin:350, suggestedMax:1200 } } }
+  });
+  chartAirflow = new Chart(document.getElementById('chartAirflow').getContext('2d'), {
+    type:'line', data:{ labels:[], datasets:makeDS(history.mdot) },
+    options: { ...chartOpts, scales: { ...chartOpts.scales, y:{ ...chartOpts.scales.y, suggestedMin:0, suggestedMax:0.8, title:{display:true, text:'kg/s', color:'#5a6478', font:{family:'Inter',size:10}} } } }
+  });
+}
+
+/* ═══ RENDER ═══ */
+function render() {
+  const row = csvData[cursor];
+  if (!row) return;
+
+  // Clock
+  const dt = row.datetime || '';
+  const parts = dt.split(' ');
+  const md = (parts[0]||'').split('-');
+  const mo = parseInt(md[0])||1; const dy = parseInt(md[1])||1;
+  const tm = parts[1] || '00:00';
+  document.getElementById('simClock').textContent = `${MONTH_NAMES[mo-1]} ${String(dy).padStart(2,'0')} — ${tm}`;
+
+  // Progress
+  const pct = cursor / (csvData.length - 1) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct.toFixed(1) + '%';
+
+  // Zone KPIs
+  let co2Max = 0, totalMdot = 0;
+  ZONES.forEach((z,i) => {
+    const k = z.key;
+    const T = row[k+'_T'], rh = row[k+'_rh'], co2 = row[k+'_co2'], mdot = row[k+'_mdot_cmd'];
+    document.getElementById('zt'+i).textContent = T != null ? T.toFixed(1) : '--';
+    document.getElementById('zrh'+i).textContent = rh != null ? rh.toFixed(0) : '--';
+    document.getElementById('zco2'+i).textContent = co2 != null ? co2.toFixed(0) : '--';
+    document.getElementById('zmf'+i).textContent = mdot != null ? mdot.toFixed(3) : '--';
+
+    // Status
+    const dot = document.getElementById('zstatus'+i);
+    dot.className = 'status-dot';
+    if ((T && T > z.coolSP + 2) || (co2 && co2 > 1000)) dot.classList.add('status-crit');
+    else if ((T && T > z.coolSP + 1) || (co2 && co2 > 800) || (rh && rh > 70)) dot.classList.add('status-warn');
+    else dot.classList.add('status-ok');
+
+    if (co2 > co2Max) co2Max = co2;
+    totalMdot += (mdot || 0);
+  });
+
+  // AHU
+  const sat = row['AHU_SAT_cmd'];
+  const oa = row['AHU_OA_cmd'];
+  document.getElementById('ahuSATval').textContent = sat != null ? sat.toFixed(1) : '--';
+  document.getElementById('ahuSATgauge').style.width = sat != null ? ((sat - 8) / 12 * 100) + '%' : '0';
+  document.getElementById('ahuOAval').textContent = oa != null ? oa.toFixed(3) : '--';
+  const oaMax = totalMdot > 0 ? totalMdot : 1;
+  document.getElementById('ahuOAgauge').style.width = oa != null ? (oa / oaMax * 100) + '%' : '0';
+
+  // OA Ratio (mixed)
+  const oaRatio = (totalMdot > 0 && oa != null) ? (oa / totalMdot * 100) : 0;
+  document.getElementById('ahuOARval').textContent = oaRatio.toFixed(1);
+  document.getElementById('ahuOARgauge').style.width = Math.min(100, oaRatio) + '%';
+  const oarG = document.getElementById('ahuOARgauge');
+  oarG.style.background = oaRatio < 15 ? 'var(--red)' : oaRatio < 30 ? 'var(--amber)' : 'var(--green)';
+
+  // Worst CO2
+  document.getElementById('ahuCO2val').textContent = co2Max.toFixed(0);
+  const co2Pct = Math.min(100, co2Max / 1200 * 100);
+  const co2G = document.getElementById('ahuCO2gauge');
+  co2G.style.width = co2Pct + '%';
+  co2G.style.background = co2Max > 1000 ? 'var(--red)' : co2Max > 800 ? 'var(--amber)' : 'var(--green)';
+
+  // Charts — update every 3rd render for perf
+  if (cursor % 3 === 0 || cursor >= csvData.length - 1) {
+    const lbl = [...history.labels];
+    chartTemp.data.labels = lbl;
+    chartRH.data.labels = lbl;
+    chartCO2.data.labels = lbl;
+    chartAirflow.data.labels = lbl;
+
+    // Apply zone filter: show only selected zone or all
+    function applyFilter(chart, dataSource, filterKey, extraDS) {
+      const sel = chartFilter[filterKey];
+      for (let i = 0; i < 5; i++) {
+        const visible = (sel === 'all' || sel === i);
+        chart.data.datasets[i].data = visible ? [...dataSource[i]] : [];
+        chart.data.datasets[i].hidden = !visible;
+      }
+      if (extraDS !== undefined) {
+        chart.data.datasets[5].data = Array(lbl.length).fill(extraDS);
+      }
+    }
+    applyFilter(chartTemp, history.temp, 'temp');
+    applyFilter(chartRH, history.rh, 'rh');
+    applyFilter(chartCO2, history.co2, 'co2', 1000);
+    applyFilter(chartAirflow, history.mdot, 'airflow');
+
+    chartTemp.update('none');
+    chartRH.update('none');
+    chartCO2.update('none');
+    chartAirflow.update('none');
+  }
+
+  // Config table
+  const tbody = document.getElementById('configBody');
+  tbody.innerHTML = ZONES.map((z,i) => {
+    const k = z.key;
+    const T = row[k+'_T'], co2 = row[k+'_co2'], rh = row[k+'_rh'], mdot = row[k+'_mdot_cmd'];
+    let sc = 'badge-ok', st = 'OK';
+    if ((T && T > z.coolSP + 2) || (co2 && co2 > 1000)) { sc='badge-crit'; st='CRITICAL'; }
+    else if ((T && T > z.coolSP + 1) || (co2 && co2 > 800)) { sc='badge-warn'; st='WARNING'; }
+    return `<tr>
+      <td><span class="zone-dot" style="background:${z.color}"></span>${z.name}</td>
+      <td>${z.use}</td><td class="mono-cell">PI + Anti-Windup</td><td class="mono-cell">EKF</td>
+      <td class="mono-cell">${z.coolSP}°C</td><td class="mono-cell">${z.heatSP}°C</td>
+      <td class="mono-cell">${z.rhTarget}%</td><td class="mono-cell">${z.kp}</td><td class="mono-cell">${z.ki}</td>
+      <td class="mono-cell">${z.maxMdot.toFixed(2)} kg/s</td>
+      <td class="mono-cell">${T!=null?T.toFixed(1):'--'}°C</td>
+      <td class="mono-cell">${mdot!=null?mdot.toFixed(3):'--'} kg/s</td>
+      <td class="mono-cell">${co2!=null?co2.toFixed(0):'--'} ppm</td>
+      <td><span class="badge ${sc}">${st}</span></td></tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

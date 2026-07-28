@@ -9,9 +9,14 @@ from controllers.zone_controller import ZoneController
 
 
 class Zone4Controller(ZoneController):
-    def step(self, meas, dt):
-        req = super().step(meas, dt)
+    def _gain_multiplier(self, hour, is_weekday):
+        # Server room: constant 24/7 load — no time-of-day gain adjustment.
+        return 1.0, 1.0
+
+    def step(self, meas, dt, hour=12.0, is_weekday=True):
+        req = super().step(meas, dt, hour, is_weekday)
         # Server room safety floor: always keep some cooling airflow.
         min_mdot = 0.30 * self.cfg["max_mdot"]
         req["mdot"] = max(req["mdot"], min_mdot)
         return req
+
