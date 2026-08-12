@@ -86,8 +86,13 @@ class Orchestrator:
             self.h[f"csp:{k}"]  = ex.get_actuator_handle(
                 st, "Zone Temperature Control", "Cooling Setpoint", k)
 
-        # People actuators are NOT used — EnergyPlus drives occupancy from
-        # its own IDF schedule. We only mirror it in Python for CSV logging.
+        # People actuators — override Number of People for this day's random draw.
+        # EnergyPlus multiplies this by the schedule fraction internally.
+        for z in ZONES:
+            k = z["zone"]
+            ppl_name = k.upper().replace(" ", " ") + " PEOPLE"  # e.g. "ZONE 1 PEOPLE"
+            self.h[f"ppl:{k}"] = ex.get_actuator_handle(
+                st, "People", "Number of People", ppl_name)
 
         missing = [name for name, hv in self.h.items() if hv == -1]
         if missing:
@@ -146,11 +151,14 @@ class Orchestrator:
 
         dt = ex.system_time_step(st) * 3600.0  # hours -> seconds
 
-        # 0) OCCUPANCY — mirror the IDF schedule for logging (no actuator write)
+        # 0) OCCUPANCY — draw a new daily random max and write to actuator
         hour       = ex.hour(st) + ex.minutes(st) / 60.0
         ep_dow     = ex.day_of_week(st)   # 1=Sun, 2=Mon … 7=Sat (EnergyPlus)
+        ep_dom     = ex.day_of_month(st)  # 1–31
         for i, (occ_model, z) in enumerate(zip(self.occ_models, ZONES)):
-            self._occ_counts[i] = occ_model.step(hour, ep_dow)
+            self._occ_counts[i] = occ_model.step(hour, ep_dow, ep_dom)
+            # Push today's random peak capacity into EnergyPlus
+            ex.set_actuator_value(st, self.h[f"ppl:{z['zone']}"], float(occ_model.today_max))
 
         is_weekday = 2 <= ep_dow <= 6   # EnergyPlus: 1=Sun, 2=Mon … 6=Fri, 7=Sat
 

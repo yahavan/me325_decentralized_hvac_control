@@ -197,13 +197,16 @@ if not (saturated_high or saturated_low):
 Each zone adjusts its supply air temperature request based on local RH:
 
 ```
-if RH > rh_target:
-    t_sup_req = 12.0 °C   (aggressive dehumidification - colder air holds less moisture)
+rh_err = RH - rh_target
+if rh_err <= 5.0%:
+    t_sup_req = 14.0 °C   (normal cooling)
+elif rh_err <= 10.0%:
+    t_sup_req = 14.0 to 13.0 °C   (mild dehumidification)
 else:
-    t_sup_req = 14.0 °C   (standard cooling mode)
+    t_sup_req = 13.0 to 12.0 °C   (aggressive dehumidification)
 ```
 
-This is a simple **bang-bang humidity override** on the SAT request — the AHU will then pick the minimum across all zones.
+This is a **sliding scale humidity override with a 5% dead-band** on the SAT request. The dead-band prevents the tropical background humidity from permanently locking the AHU into dehumidification mode.
 
 ### Zone 4 Override — Server Room Safety Floor
 

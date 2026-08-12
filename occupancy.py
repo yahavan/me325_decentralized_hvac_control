@@ -1,10 +1,17 @@
-"""IDF-schedule occupancy mirror — for logging only.
+"""IDF-schedule occupancy mirror — with daily random maximum occupancy.
 
-This module does NOT write to any EnergyPlus actuator. It simply replicates
-the 'Office Occupancy' Schedule:Compact defined in the IDF so that the
-control_log.csv can record the expected occupancy count each timestep.
+The 'Office Occupancy' Schedule:Compact fraction (defined in the IDF) is left
+completely untouched.  Instead, this module overrides the *Number of People*
+field via the EnergyPlus 'People → Number of People' actuator.
 
-EnergyPlus drives the actual heat/CO2 gains from its own schedule internally.
+EnergyPlus internally computes:
+    actual_people(t) = today_max  ×  schedule_fraction(t)
+
+So on weekdays between 08:00–18:00 (fraction = 1.0) the full today_max people
+are present; outside those hours only 5 % are present; weekends → 0.
+
+Each zone draws a fresh random integer at midnight of every simulation day,
+bounded by the per-zone [occ_min, occ_max] caps defined in config.py.
 
 IDF schedule (Office Occupancy, Fraction):
     Weekdays / SummerDesignDay:
@@ -14,13 +21,15 @@ IDF schedule (Office Occupancy, Fraction):
     All other days:
         Until 24:00 → 0.00
 
-Zone max people (from IDF People objects, method=People, number=N):
-    Zone 1  →  8
-    Zone 2  →  4
-    Zone 3  → 12
-    Zone 4  →  1
-    Zone 5  →  5
+Zone default caps (from IDF People objects — kept for reference):
+    Zone 1  →  IDF default 8   |  caps: [4, 12]
+    Zone 2  →  IDF default 4   |  caps: [2,  6]
+    Zone 3  →  IDF default 12  |  caps: [3, 20]
+    Zone 4  →  IDF default 1   |  caps: [1,  2]
+    Zone 5  →  IDF default 5   |  caps: [2,  8]
 """
+
+import random
 
 
 def _office_occupancy_fraction(hour, day_of_week_ep):
@@ -48,57 +57,67 @@ def _office_occupancy_fraction(hour, day_of_week_ep):
 
 
 class ZoneOccupancy:
-    """Read-only mirror of the IDF People schedule for one zone.
+    """Daily-randomised occupancy model for one zone.
+
+    Each simulation day a new random integer is drawn from [occ_min, occ_max].
+    That value is written to the EnergyPlus 'People → Number of People'
+    actuator by main.py, so EnergyPlus uses it as the peak capacity for the
+    day.  The IDF schedule fraction is then multiplied on top.
 
     Attributes
     ----------
-    current    : float  people count computed at the last call to step()
-    max_people : int    peak people count from the IDF People object
+    today_max  : int    this day's random peak headcount (actuator value)
+    current    : float  expected people count at the current timestep
+                        (= today_max × schedule_fraction)
+    occ_min    : int    lower cap for the random draw
+    occ_max    : int    upper cap for the random draw
     """
 
-    def __init__(self, max_people):
-        self.max_people = max_people
+    def __init__(self, occ_min, occ_max):
+        self.occ_min = occ_min
+        self.occ_max = occ_max
+        self.today_max = random.randint(occ_min, occ_max)  # initial draw
         self.current = 0.0
+        self._last_day = None   # tracks EnergyPlus day-of-month
 
-    def step(self, hour, day_of_week_ep):
+    def step(self, hour, day_of_week_ep, day_of_month):
         """Compute and cache the expected people count for this timestep.
+
+        A new today_max is drawn whenever the simulation day changes (i.e. at
+        midnight of each new day).
 
         Parameters
         ----------
         hour           : float  hour of day (0–23.99)
         day_of_week_ep : int    EnergyPlus day-of-week (1=Sun … 7=Sat)
+        day_of_month   : int    EnergyPlus day of month (1–31)
 
         Returns
         -------
-        float : people count (fraction × max_people)
+        float : expected people count for this timestep
         """
+        # Refresh today_max at the start of each new day
+        if day_of_month != self._last_day:
+            self.today_max = random.randint(self.occ_min, self.occ_max)
+            self._last_day = day_of_month
+
         fraction = _office_occupancy_fraction(hour, day_of_week_ep)
-        self.current = self.max_people * fraction
+        self.current = self.today_max * fraction
         return self.current
 
 
 # ---------------------------------------------------------------------------
-# Zone definitions — must stay in sync with the IDF People objects
+# Factory — must stay in sync with config.py ZONES list
 # ---------------------------------------------------------------------------
-_IDF_MAX_PEOPLE = {
-    "Zone 1": 8,
-    "Zone 2": 4,
-    "Zone 3": 12,
-    "Zone 4": 1,
-    "Zone 5": 5,
-}
-
-
 def build_occupancy_models(zones_cfg):
     """Return a list of ZoneOccupancy instances, one per zone config dict.
 
     Parameters
     ----------
-    zones_cfg : list[dict]  zone config dicts from config.py (must have 'zone' key)
+    zones_cfg : list[dict]  zone config dicts from config.py
+                            Must have 'occ_min' and 'occ_max' keys.
     """
-    models = []
-    for z in zones_cfg:
-        zone_name = z["zone"]
-        max_p = _IDF_MAX_PEOPLE.get(zone_name, 0)
-        models.append(ZoneOccupancy(max_people=max_p))
-    return models
+    return [
+        ZoneOccupancy(occ_min=z["occ_min"], occ_max=z["occ_max"])
+        for z in zones_cfg
+    ]

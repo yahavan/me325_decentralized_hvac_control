@@ -104,9 +104,12 @@ class ZoneController:
         kp_eff = self.kp * kp_mult
         ki_eff = self.ki * ki_mult
 
-        # --- Conditional integration (anti-windup) ---
-        # Tentatively update the integrator.
-        integral_candidate = self._integral + err * dt
+        # --- Conditional integration (anti-windup + deadband) ---
+        # Only accumulate when the error is outside the deadband.
+        # This prevents noise and small oscillations near setpoint from
+        # winding the integrator up, which is the main cause of overshoot.
+        DEADBAND = 0.1   # °C — tune down if steady-state offset reappears
+        integral_candidate = self._integral + (err * dt if abs(err) > DEADBAND else 0.0)
 
         # Compute raw PI output with the candidate integral.
         u_raw = kp_eff * err + ki_eff * integral_candidate
@@ -123,15 +126,30 @@ class ZoneController:
             self._integral = integral_candidate
         # else: leave self._integral unchanged — freeze accumulation at the limit.
 
-        # 3) SAT request: proportional — slides from 14°C (dry) to 12°C (humid)
-        #    based on how far RH is from target. Avoids the bang-bang switching
-        #    that causes saw-tooth oscillation in humidity.
-        #    At rh_target      → 13°C (neutral)
-        #    At rh_target + 5% → 12°C (max dehumidification)
-        #    At rh_target - 5% → 14°C (back off)
+        # 3) SAT request — humidity-based with a dead-band.
+        #
+        #    The old formula activated dehumidification at any RH excess, which
+        #    held the AHU at 12 °C ~98% of the year in Colombo's climate and
+        #    caused chronic over-cooling.
+        #
+        #    New logic:
+        #      RH ≤ rh_target + 5%   → 14 °C  (normal cooling, no dehumidification)
+        #      rh_target+5% < RH ≤ rh_target+10% → slide 14→13 °C  (mild dehumidification)
+        #      RH > rh_target + 10%  → slide 13→12 °C  (aggressive dehumidification)
+        #
+        #    The 5 % dead-band prevents the tropical background humidity from
+        #    permanently locking the AHU into dehumidification mode.
         rh_err = meas["rh"] - self.cfg["rh_target"]   # +ve = too humid
-        t_sup_req = max(12.0, min(14.0, 13.0 - 0.2 * rh_err))
+        if rh_err <= 5.0:
+            t_sup_req = 14.0                             # normal cooling
+        elif rh_err <= 10.0:
+            t_sup_req = 14.0 - 0.2 * (rh_err - 5.0)    # 14→13 °C over 5% excess
+        else:
+            t_sup_req = 13.0 - 0.1 * (rh_err - 10.0)   # 13→12 °C over further 10% excess
+        t_sup_req = max(12.0, min(14.0, t_sup_req))
 
         self._last_u.update(mdot=mdot, t_sup=t_sup_req)
         return dict(zone=self.zone, mdot=mdot, t_sup_req=t_sup_req,
-                    co2=meas["co2"], cool_sp=self.cool_sp, est=est)
+                    co2=meas["co2"], cool_sp=self.cool_sp,
+                    T_zone=meas["T"],   # passed to AHU for SAT reset (read-only)
+                    est=est)

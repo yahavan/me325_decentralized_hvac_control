@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ME325 Decentralised HVAC Control — Live Dashboard</title>
-<meta name="description" content="Interactive real-time playback dashboard for multi-zone VAV building simulation with decentralised PI controllers and EKF state estimation.">
+<title>ME325 Decentralised HVAC Control — Dashboard</title>
+<meta name="description" content="Interactive playback dashboard for multi-zone VAV building simulation with decentralised PI controllers and EKF state estimation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -45,15 +45,12 @@ body::before {
   box-shadow: var(--shadow);
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
-.glass:hover {
-  transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0,0,0,0.55);
-  border-color: var(--border-bright);
-}
+.glass:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0,0,0,0.55); border-color: var(--border-bright); }
 
 /* ═══ HEADER ═══ */
 .header {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(8,12,20,0.85); backdrop-filter: blur(24px);
+  background: rgba(8,12,20,0.88); backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border); padding: 0 24px;
 }
@@ -80,7 +77,7 @@ body::before {
 .transport button {
   background: none; border: none; color: var(--text); cursor: pointer;
   font-size: 1.1rem; padding: 4px 6px; border-radius: 6px;
-  transition: background 0.2s, color 0.2s; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, color 0.2s;
 }
 .transport button:hover { background: rgba(255,255,255,0.1); color: var(--text-bright); }
 .transport button.active { color: var(--green); }
@@ -90,51 +87,30 @@ body::before {
   font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; cursor: pointer;
 }
 .speed-select option { background: #1a1d27; }
-.pulse-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: var(--green);
-  animation: pulse 2s ease-in-out infinite;
-}
+.pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s ease-in-out infinite; }
 .pulse-dot.paused { background: var(--amber); animation: none; }
 @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.5)} 50%{box-shadow:0 0 0 6px rgba(74,222,128,0)} }
 .clock-text { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--text); font-weight: 500; white-space: nowrap; }
 
 /* ═══ PROGRESS BAR ═══ */
-.progress-wrap {
-  width: 100%; padding: 6px 0; cursor: pointer; position: relative;
-}
-.progress-track {
-  width: 100%; height: 6px; background: rgba(255,255,255,0.06);
-  border-radius: 3px; overflow: hidden; position: relative;
-}
-.progress-fill {
-  height: 100%; border-radius: 3px;
-  background: linear-gradient(90deg, var(--z1), var(--z4));
-  transition: width 0.15s linear;
-}
+.progress-wrap { width: 100%; padding: 6px 0; cursor: pointer; position: relative; }
+.progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--z1), var(--z4)); transition: width 0.15s linear; }
 .progress-wrap:hover .progress-track { height: 10px; }
-.progress-labels {
-  display: flex; justify-content: space-between; margin-top: 4px;
-  font-size: 0.65rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
-}
+.progress-labels { display: flex; justify-content: space-between; margin-top: 4px; font-size: 0.65rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
 
-/* ═══ LOADING OVERLAY ═══ */
+/* ═══ LOADING / FILE DROP ═══ */
 .loading-overlay {
   position: fixed; inset: 0; z-index: 200;
   background: rgba(8,12,20,0.95); display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 20px;
-  transition: opacity 0.5s;
+  align-items: center; justify-content: center; gap: 20px; transition: opacity 0.5s;
 }
 .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-.loading-spinner {
-  width: 48px; height: 48px; border: 3px solid var(--border);
-  border-top-color: var(--z1); border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
+.loading-spinner { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--z1); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text { font-size: 1rem; color: var(--text-dim); }
 .loading-sub { font-size: 0.78rem; color: var(--text-dim); opacity: 0.6; }
 
-/* ═══ FILE DROP ZONE ═══ */
 .file-drop {
   position: fixed; inset: 0; z-index: 200;
   background: rgba(8,12,20,0.95);
@@ -144,12 +120,9 @@ body::before {
 .drop-area {
   width: 500px; max-width: 90%; padding: 60px 40px;
   border: 2px dashed var(--border-bright); border-radius: 20px;
-  text-align: center; cursor: pointer;
-  transition: border-color 0.3s, background 0.3s;
+  text-align: center; cursor: pointer; transition: border-color 0.3s, background 0.3s;
 }
-.drop-area:hover, .drop-area.drag-over {
-  border-color: var(--z1); background: rgba(79,195,247,0.05);
-}
+.drop-area:hover, .drop-area.drag-over { border-color: var(--z1); background: rgba(79,195,247,0.05); }
 .drop-icon { font-size: 3rem; margin-bottom: 16px; }
 .drop-title { font-size: 1.2rem; font-weight: 700; color: var(--text-bright); margin-bottom: 8px; }
 .drop-sub { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
@@ -182,10 +155,7 @@ body::before {
 .zone-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .zone-name { font-weight: 700; font-size: 0.88rem; }
 .zone-use { font-size: 0.68rem; color: var(--text-dim); font-weight: 500; }
-.status-dot {
-  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-  animation: pulse 2s ease-in-out infinite;
-}
+.status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
 .status-ok { background: var(--green); box-shadow: 0 0 8px rgba(74,222,128,0.5); }
 .status-warn { background: var(--amber); box-shadow: 0 0 8px rgba(251,191,36,0.5); }
 .status-crit { background: var(--red); box-shadow: 0 0 8px rgba(248,113,113,0.5); }
@@ -194,20 +164,11 @@ body::before {
 .kpi-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-weight: 600; margin-bottom: 1px; }
 .kpi-value { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 600; color: var(--text-bright); }
 .kpi-unit { font-size: 0.68rem; color: var(--text-dim); font-weight: 400; }
-
-/* ═══ ZONE SELECTOR ═══ */
-.zone-select {
-  background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-  color: var(--text-bright); font-family: 'Inter', sans-serif;
-  font-size: 0.72rem; font-weight: 500; padding: 4px 10px; border-radius: 8px; cursor: pointer;
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238892a4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 8px center; padding-right: 24px;
-  transition: border-color 0.2s, background 0.2s;
-}
-.zone-select:hover { border-color: var(--border-bright); background: rgba(255,255,255,0.09); }
-.zone-select:focus { outline: none; border-color: var(--z1); }
-.zone-select option { background: #1a1d27; color: var(--text); }
+/* Occupancy mini-bar inside zone card */
+.occ-bar-wrap { margin-top: 10px; }
+.occ-bar-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-weight: 600; margin-bottom: 4px; display: flex; justify-content: space-between; }
+.occ-bar-track { width: 100%; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+.occ-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s cubic-bezier(.4,0,.2,1); }
 
 /* ═══ AHU ROW ═══ */
 .ahu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
@@ -218,32 +179,58 @@ body::before {
 .gauge-track { width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-top: 10px; overflow: hidden; }
 .gauge-fill { height: 100%; border-radius: 3px; transition: width 0.4s cubic-bezier(.4,0,.2,1), background 0.4s; }
 
-/* ═══ CHARTS ═══ */
-.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.chart-card { padding: 18px; }
-.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-.chart-title { font-weight: 700; font-size: 0.88rem; color: var(--text-bright); }
-.chart-wrap { position: relative; height: 260px; }
-.chart-wrap canvas { width: 100% !important; height: 100% !important; }
+/* ═══ OCCUPANCY SECTION ═══ */
+.occ-section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.occ-bars-card { padding: 18px; }
+.occ-bars-title { font-weight: 700; font-size: 0.88rem; color: var(--text-bright); margin-bottom: 14px; }
+.occ-zone-rows { display: flex; flex-direction: column; gap: 12px; }
+.occ-zone-row { display: flex; align-items: center; gap: 10px; }
+.occ-zone-lbl { font-size: 0.72rem; font-weight: 600; width: 50px; flex-shrink: 0; }
+.occ-zone-track { flex: 1; height: 22px; background: rgba(255,255,255,0.04); border-radius: 6px; overflow: hidden; position: relative; }
+.occ-zone-fill {
+  height: 100%; border-radius: 6px; transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  display: flex; align-items: center; justify-content: flex-end; padding-right: 8px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 700;
+  color: rgba(0,0,0,0.75); min-width: 32px;
+}
+.occ-zone-cap { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); width: 60px; text-align: right; flex-shrink: 0; }
+.occ-chart-card { padding: 18px; }
+.occ-chart-wrap { position: relative; height: 200px; }
 
 /* ═══ AIRFLOW BARS ═══ */
 .airflow-bars { display: flex; flex-direction: column; gap: 8px; }
 .airflow-row { display: flex; align-items: center; gap: 10px; }
 .airflow-label { font-size: 0.72rem; font-weight: 600; color: var(--text-dim); width: 28px; flex-shrink: 0; }
-.airflow-track {
-  flex: 1; height: 20px; background: rgba(255,255,255,0.04);
-  border-radius: 6px; overflow: hidden; position: relative;
-}
+.airflow-track { flex: 1; height: 20px; background: rgba(255,255,255,0.04); border-radius: 6px; overflow: hidden; }
 .airflow-fill {
   height: 100%; border-radius: 6px; transition: width 0.4s cubic-bezier(.4,0,.2,1);
   display: flex; align-items: center; justify-content: flex-end; padding-right: 6px;
   font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600;
   color: rgba(0,0,0,0.7); min-width: 28px;
 }
-.airflow-max {
-  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
-  color: var(--text-dim); width: 52px; text-align: right; flex-shrink: 0;
+.airflow-max { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); width: 52px; text-align: right; flex-shrink: 0; }
+
+/* ═══ CHARTS ═══ */
+.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.chart-card { padding: 18px; }
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.chart-title { font-weight: 700; font-size: 0.88rem; color: var(--text-bright); }
+.chart-wrap { position: relative; height: 240px; }
+.chart-wrap canvas { width: 100% !important; height: 100% !important; }
+
+/* ═══ ZONE SELECTOR ═══ */
+.zone-select {
+  background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+  color: var(--text-bright); font-family: 'Inter', sans-serif;
+  font-size: 0.72rem; font-weight: 500; padding: 4px 10px; border-radius: 8px; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238892a4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center; padding-right: 24px;
+  transition: border-color 0.2s;
 }
+.zone-select:hover { border-color: var(--border-bright); }
+.zone-select:focus { outline: none; border-color: var(--z1); }
+.zone-select option { background: #1a1d27; color: var(--text); }
 
 /* ═══ CONFIG TABLE ═══ */
 .table-wrap { overflow-x: auto; border-radius: var(--radius); scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
@@ -266,7 +253,7 @@ body::before {
 .footer { text-align: center; padding: 20px 0; font-size: 0.7rem; color: var(--text-dim); border-top: 1px solid var(--border); margin-top: 16px; }
 
 /* ═══ RESPONSIVE ═══ */
-@media (max-width: 1280px) { .zone-grid { grid-template-columns: repeat(3, 1fr); } .chart-row { grid-template-columns: 1fr; } .ahu-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 1280px) { .zone-grid { grid-template-columns: repeat(3, 1fr); } .chart-row { grid-template-columns: 1fr; } .ahu-grid { grid-template-columns: repeat(2, 1fr); } .occ-section-grid { grid-template-columns: 1fr; } }
 @media (max-width: 960px) { .zone-grid { grid-template-columns: repeat(2, 1fr); } .ahu-grid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) {
   html { font-size: 14px; }
@@ -290,9 +277,7 @@ body::before {
     <input type="file" class="file-input" id="fileInput" accept=".csv">
   </div>
   <div class="or-text">— or —</div>
-  <button class="auto-load-btn" id="autoLoadBtn">
-    Auto-load from out/control_log.csv
-  </button>
+  <button class="auto-load-btn" id="autoLoadBtn">Auto-load from out/control_log.csv</button>
   <div class="drop-sub" style="margin-top:8px; opacity:0.5;">
     Auto-load works when served via <code>python -m http.server</code> from the project root
   </div>
@@ -321,6 +306,9 @@ body::before {
         <button id="btnPlay" title="Play / Pause" class="active">▶</button>
         <button id="btnStepFwd" title="Step +1h">⏭</button>
         <select class="speed-select" id="speedSelect">
+          <option value="0.1">0.1×</option>
+          <option value="0.25">0.25×</option>
+          <option value="0.5">0.5×</option>
           <option value="1">1×</option>
           <option value="5">5×</option>
           <option value="10">10×</option>
@@ -330,6 +318,12 @@ body::before {
           <option value="250">250×</option>
           <option value="500">500×</option>
         </select>
+        <!-- Time-window selector -->
+        <select class="speed-select" id="windowSelect" title="Chart time window">
+          <option value="144">1 Day</option>
+          <option value="432">3 Days</option>
+          <option value="1008" selected>7 Days</option>
+        </select>
         <div class="pulse-dot" id="pulseDot"></div>
         <span class="clock-text" id="simClock">Jan 01 — 00:00</span>
       </div>
@@ -338,7 +332,7 @@ body::before {
   <!-- Scrubber -->
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0"></div></div>
-    <div class="progress-labels"><span id="progStart">Jan 01</span><span id="progPct">0.0%</span><span id="progEnd">Dec 31</span></div>
+    <div class="progress-labels"><span id="progStart">—</span><span id="progPct">0.0%</span><span id="progEnd">—</span></div>
   </div>
 </header>
 
@@ -358,26 +352,44 @@ body::before {
       <div class="glass ahu-card">
         <div class="ahu-label">Supply Air Temp Setpoint</div>
         <div class="ahu-value" id="ahuSATval">--</div>
-        <div class="ahu-sub">°C (floor 10°C)</div>
-        <div class="gauge-track"><div class="gauge-fill" id="ahuSATgauge" style="width:0; background: var(--z1);"></div></div>
+        <div class="ahu-sub">°C (floor 10 °C)</div>
+        <div class="gauge-track"><div class="gauge-fill" id="ahuSATgauge" style="width:0; background:var(--z1);"></div></div>
       </div>
       <div class="glass ahu-card">
         <div class="ahu-label">Outdoor Air Mass Flow</div>
         <div class="ahu-value" id="ahuOAval">--</div>
-        <div class="ahu-sub" id="ahuOAsub">kg/s</div>
-        <div class="gauge-track"><div class="gauge-fill" id="ahuOAgauge" style="width:0; background: var(--z2);"></div></div>
+        <div class="ahu-sub">kg/s</div>
+        <div class="gauge-track"><div class="gauge-fill" id="ahuOAgauge" style="width:0; background:var(--z2);"></div></div>
       </div>
       <div class="glass ahu-card">
         <div class="ahu-label">OA Ratio (Mixed)</div>
         <div class="ahu-value" id="ahuOARval">--</div>
         <div class="ahu-sub">% of total supply air</div>
-        <div class="gauge-track"><div class="gauge-fill" id="ahuOARgauge" style="width:0; background: var(--z3);"></div></div>
+        <div class="gauge-track"><div class="gauge-fill" id="ahuOARgauge" style="width:0;"></div></div>
       </div>
       <div class="glass ahu-card">
-        <div class="ahu-label">Worst-Zone CO₂</div>
+        <div class="ahu-label">Worst-Zone CO&#8322;</div>
         <div class="ahu-value" id="ahuCO2val">--</div>
         <div class="ahu-sub">ppm (ASHRAE limit 1000)</div>
         <div class="gauge-track"><div class="gauge-fill" id="ahuCO2gauge" style="width:0;"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Occupancy -->
+  <section class="section">
+    <div class="section-title">Occupancy</div>
+    <div class="occ-section-grid">
+      <div class="glass occ-bars-card">
+        <div class="occ-bars-title">Current Headcount vs Daily Max</div>
+        <div class="occ-zone-rows" id="occBarsContainer"></div>
+      </div>
+      <div class="glass occ-chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Occupancy Over Time (people)</div>
+          <select class="zone-select" id="selOcc"></select>
+        </div>
+        <div class="occ-chart-wrap"><canvas id="chartOcc"></canvas></div>
       </div>
     </div>
   </section>
@@ -405,11 +417,11 @@ body::before {
 
   <!-- Charts: CO2 + Airflow -->
   <section class="section">
-    <div class="section-title">CO₂ &amp; Airflow</div>
+    <div class="section-title">CO&#8322; &amp; Airflow</div>
     <div class="chart-row">
       <div class="glass chart-card">
         <div class="chart-header">
-          <div class="chart-title">CO₂ Concentration (ppm)</div>
+          <div class="chart-title">CO&#8322; Concentration (ppm)</div>
           <select class="zone-select" id="selCO2"></select>
         </div>
         <div class="chart-wrap"><canvas id="chartCO2"></canvas></div>
@@ -433,7 +445,8 @@ body::before {
           <thead><tr>
             <th>Zone</th><th>Use</th><th>Controller</th><th>Estimator</th>
             <th>Cool SP</th><th>Heat SP</th><th>RH Target</th><th>Kp</th><th>Ki</th>
-            <th>Max Flow</th><th>Current T</th><th>Airflow</th><th>CO₂</th><th>Status</th>
+            <th>Max Flow</th><th>Occ Min</th><th>Occ Max</th>
+            <th>Curr T</th><th>Airflow</th><th>CO&#8322;</th><th>Occupancy</th><th>Status</th>
           </tr></thead>
           <tbody id="configBody"></tbody>
         </table>
@@ -443,33 +456,45 @@ body::before {
 </main>
 
 <footer class="footer container" id="footerEl" style="display:none;">
-  ME325 Decentralised HVAC Control — University of Moratuwa — EnergyPlus Annual Simulation Playback
+  ME325 Decentralised HVAC Control &mdash; University of Moratuwa &mdash; EnergyPlus Annual Simulation Playback
 </footer>
 
 <script>
 /* ═══════════════════════════════════════
-   ZONE METADATA (from config.py)
+   ZONE METADATA — must match config.py
    ═══════════════════════════════════════ */
 const ZONES = [
-  { key:'Zone1', name:'Zone 1', use:'Open Office',     color:'#4FC3F7', coolSP:24, heatSP:18, rhTarget:55, kp:0.15, ki:0.008, maxFlowM3s:0.50, maxMdot:0.60 },
-  { key:'Zone2', name:'Zone 2', use:'Private Offices',  color:'#A8D5A2', coolSP:24, heatSP:18, rhTarget:55, kp:0.15, ki:0.008, maxFlowM3s:0.35, maxMdot:0.42 },
-  { key:'Zone3', name:'Zone 3', use:'Conference Room',   color:'#FFB74D', coolSP:24, heatSP:18, rhTarget:55, kp:0.20, ki:0.010, maxFlowM3s:0.55, maxMdot:0.66 },
-  { key:'Zone4', name:'Zone 4', use:'Server Room',       color:'#CE93D8', coolSP:24, heatSP:18, rhTarget:50, kp:0.25, ki:0.012, maxFlowM3s:0.60, maxMdot:0.72 },
-  { key:'Zone5', name:'Zone 5', use:'Reception',          color:'#F48FB1', coolSP:24, heatSP:18, rhTarget:55, kp:0.15, ki:0.008, maxFlowM3s:0.35, maxMdot:0.42 },
+  { key:'Zone1', name:'Zone 1', use:'Open Office',     color:'#4FC3F7', coolSP:24, heatSP:18, rhTarget:55, kp:0.25,  ki:0.00008,  maxFlowM3s:0.50, maxMdot:0.60, occMin:4,  occMax:12 },
+  { key:'Zone2', name:'Zone 2', use:'Private Offices',  color:'#A8D5A2', coolSP:24, heatSP:18, rhTarget:55, kp:0.25,  ki:0.00008,  maxFlowM3s:0.35, maxMdot:0.42, occMin:2,  occMax:6  },
+  { key:'Zone3', name:'Zone 3', use:'Conference Room',  color:'#FFB74D', coolSP:24, heatSP:18, rhTarget:55, kp:0.30,  ki:0.0001,   maxFlowM3s:0.55, maxMdot:0.66, occMin:3,  occMax:20 },
+  { key:'Zone4', name:'Zone 4', use:'Server Room',      color:'#CE93D8', coolSP:24, heatSP:18, rhTarget:50, kp:0.35,  ki:0.00012,  maxFlowM3s:0.60, maxMdot:0.72, occMin:1,  occMax:2  },
+  { key:'Zone5', name:'Zone 5', use:'Reception',        color:'#F48FB1', coolSP:24, heatSP:18, rhTarget:55, kp:0.25,  ki:0.00008,  maxFlowM3s:0.35, maxMdot:0.42, occMin:2,  occMax:8  },
 ];
-const HISTORY_LEN = 144; // 144 steps × 10min = 24h rolling window on charts
+const HISTORY_LEN = 1008; // 7 days × 24h × 6 steps/h at 10-min resolution
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 /* ═══ STATE ═══ */
-let csvData = [];       // parsed rows
-let cursor = 0;         // current row index
+let csvData = [];
+let cursor = 0;
 let playing = false;
-let speed = 25;         // steps per tick
+let speed = 25;
 let tickTimer = null;
-const history = { labels:[], temp:[[],[],[],[],[]], rh:[[],[],[],[],[]], co2:[[],[],[],[],[]], mdot:[[],[],[],[],[]] };
+let viewWindow = 1008; // steps currently shown in charts (matches #windowSelect default)
+const history = {
+  labels: [],
+  temp:  [[],[],[],[],[]],
+  rh:    [[],[],[],[],[]],
+  co2:   [[],[],[],[],[]],
+  mdot:  [[],[],[],[],[]],
+  occ:   [[],[],[],[],[]]
+};
+const chartFilter = { temp:'all', rh:'all', co2:'all', airflow:'all', occ:'all' };
 
-// Zone filter state per chart: 'all' or zone index 0-4
-const chartFilter = { temp:'all', rh:'all', co2:'all', airflow:'all' };
+/* ═══ HELPERS ═══ */
+function fmt(v, decimals) {
+  if (v == null || isNaN(v)) return '--';
+  return v.toFixed(decimals);
+}
 
 /* ═══ CSV PARSING ═══ */
 function parseCSV(text) {
@@ -513,7 +538,7 @@ document.getElementById('autoLoadBtn').addEventListener('click', async () => {
     const text = await res.text();
     processCSVText(text);
   } catch (err) {
-    alert('Could not auto-load. Make sure you are serving from the project root.\n\n' + err.message);
+    alert('Could not auto-load. Make sure you are serving from the project root:\n\n  python -m http.server 8000\n\nThen open http://localhost:8000/dashboard.html\n\nError: ' + err.message);
     loadingOverlay.classList.add('hidden');
     fileDrop.classList.remove('hidden');
   }
@@ -547,9 +572,16 @@ function processCSVText(text) {
 /* ═══ DASHBOARD INIT ═══ */
 function initDashboard() {
   buildZoneCards();
-  buildAirflowBars();
+  buildOccupancyBars();
   buildZoneSelectors();
   initCharts();
+
+  // Set progress bar start/end labels from actual data
+  if (csvData.length > 0) {
+    document.getElementById('progStart').textContent = csvData[0].datetime || '';
+    document.getElementById('progEnd').textContent = csvData[csvData.length-1].datetime || '';
+  }
+
   cursor = 0;
   playing = true;
   updatePlayBtn();
@@ -558,20 +590,24 @@ function initDashboard() {
 }
 
 /* ═══ TRANSPORT CONTROLS ═══ */
-document.getElementById('btnPlay').addEventListener('click', () => { playing = !playing; updatePlayBtn(); if (playing) startTicker(); else stopTicker(); });
-document.getElementById('btnRestart').addEventListener('click', () => { cursor = 0; clearHistory(); render(); });
+document.getElementById('btnPlay').addEventListener('click', () => {
+  playing = !playing; updatePlayBtn();
+  if (playing) startTicker(); else stopTicker();
+});
+document.getElementById('btnRestart').addEventListener('click', () => {
+  cursor = 0; clearHistory(); render();
+});
 document.getElementById('btnStepFwd').addEventListener('click', () => {
-  // Jump +1 hour (6 steps at 10min)
   cursor = Math.min(cursor + 6, csvData.length - 1); render();
 });
-document.getElementById('speedSelect').addEventListener('change', e => { speed = parseInt(e.target.value); });
+document.getElementById('speedSelect').addEventListener('change', e => { speed = parseFloat(e.target.value); tickSkipCount = 0; });
+document.getElementById('windowSelect').addEventListener('change', e => { viewWindow = parseInt(e.target.value); });
 document.getElementById('progressWrap').addEventListener('click', e => {
   const rect = e.currentTarget.getBoundingClientRect();
   const pct = (e.clientX - rect.left) / rect.width;
   cursor = Math.round(pct * (csvData.length - 1));
   cursor = Math.max(0, Math.min(cursor, csvData.length - 1));
   clearHistory();
-  // Pre-fill history with preceding rows
   const start = Math.max(0, cursor - HISTORY_LEN);
   for (let i = start; i <= cursor; i++) pushHistory(csvData[i]);
   render();
@@ -585,19 +621,37 @@ function updatePlayBtn() {
 }
 function startTicker() { stopTicker(); tickTimer = setInterval(tick, 50); }
 function stopTicker() { if (tickTimer) { clearInterval(tickTimer); tickTimer = null; } }
+let tickSkipCount = 0; // used for sub-1× speeds
 function tick() {
   if (!playing || cursor >= csvData.length - 1) return;
-  const steps = Math.max(1, Math.round(speed / 20)); // steps per 50ms tick
-  for (let i = 0; i < steps && cursor < csvData.length - 1; i++) {
+  if (speed >= 1) {
+    // Normal or fast: advance multiple steps per 50ms tick
+    const steps = Math.max(1, Math.round(speed / 20));
+    for (let i = 0; i < steps && cursor < csvData.length - 1; i++) {
     cursor++;
     pushHistory(csvData[cursor]);
   }
-  render();
-  if (cursor >= csvData.length - 1) { playing = false; updatePlayBtn(); }
+    render();
+    if (cursor >= csvData.length - 1) { playing = false; updatePlayBtn(); }
+  } else {
+    // Slow-motion: skip ticks so only 1 step advances every (1/speed × 20) ticks
+    const skipEvery = Math.round(1 / speed * 20); // e.g. 0.5× → skip 40 ticks
+    tickSkipCount++;
+    if (tickSkipCount >= skipEvery) {
+      tickSkipCount = 0;
+      cursor++;
+      pushHistory(csvData[cursor]);
+      render();
+      if (cursor >= csvData.length - 1) { playing = false; updatePlayBtn(); }
+    }
+  }
 }
 function clearHistory() {
   history.labels = [];
-  for (let i = 0; i < 5; i++) { history.temp[i] = []; history.rh[i] = []; history.co2[i] = []; history.mdot[i] = []; }
+  for (let i = 0; i < 5; i++) {
+    history.temp[i] = []; history.rh[i] = []; history.co2[i] = [];
+    history.mdot[i] = []; history.occ[i] = [];
+  }
 }
 function pushHistory(row) {
   history.labels.push(row.datetime || '');
@@ -607,17 +661,21 @@ function pushHistory(row) {
     history.rh[i].push(row[k+'_rh']);
     history.co2[i].push(row[k+'_co2']);
     history.mdot[i].push(row[k+'_mdot_cmd']);
+    history.occ[i].push(row[k+'_occ']);
   }
   if (history.labels.length > HISTORY_LEN) {
     history.labels.shift();
-    for (let i = 0; i < 5; i++) { history.temp[i].shift(); history.rh[i].shift(); history.co2[i].shift(); history.mdot[i].shift(); }
+    for (let i = 0; i < 5; i++) {
+      history.temp[i].shift(); history.rh[i].shift(); history.co2[i].shift();
+      history.mdot[i].shift(); history.occ[i].shift();
+    }
   }
 }
 
 /* ═══ BUILD DOM ═══ */
 function buildZoneCards() {
   const grid = document.getElementById('zoneGrid');
-  grid.innerHTML = ZONES.map((z,i) => `
+  grid.innerHTML = ZONES.map((z, i) => `
     <div class="glass zone-card">
       <div class="zone-accent" style="background:${z.color}"></div>
       <div class="zone-card-body">
@@ -628,72 +686,101 @@ function buildZoneCards() {
         <div class="kpi-grid">
           <div class="kpi-item"><div class="kpi-label">Temperature</div><div class="kpi-value"><span id="zt${i}">--</span> <span class="kpi-unit">°C</span></div></div>
           <div class="kpi-item"><div class="kpi-label">Humidity</div><div class="kpi-value"><span id="zrh${i}">--</span> <span class="kpi-unit">%</span></div></div>
-          <div class="kpi-item"><div class="kpi-label">CO₂</div><div class="kpi-value"><span id="zco2${i}">--</span> <span class="kpi-unit">ppm</span></div></div>
+          <div class="kpi-item"><div class="kpi-label">CO&#8322;</div><div class="kpi-value"><span id="zco2${i}">--</span> <span class="kpi-unit">ppm</span></div></div>
           <div class="kpi-item"><div class="kpi-label">Airflow</div><div class="kpi-value"><span id="zmf${i}">--</span> <span class="kpi-unit">kg/s</span></div></div>
+        </div>
+        <div class="occ-bar-wrap">
+          <div class="occ-bar-label">
+            <span>Occupancy</span>
+            <span id="zocctext${i}">-- / ${z.occMax} people</span>
+          </div>
+          <div class="occ-bar-track">
+            <div class="occ-bar-fill" id="zoccbar${i}" style="background:${z.color}; width:0%;"></div>
+          </div>
         </div>
       </div>
     </div>`).join('');
 }
-function buildAirflowBars() {}
+
+function buildOccupancyBars() {
+  const container = document.getElementById('occBarsContainer');
+  container.innerHTML = ZONES.map((z, i) => `
+    <div class="occ-zone-row">
+      <div class="occ-zone-lbl" style="color:${z.color}">${z.name}</div>
+      <div class="occ-zone-track">
+        <div class="occ-zone-fill" id="occbar${i}" style="background:${z.color}80; width:0%;">0</div>
+      </div>
+      <div class="occ-zone-cap" id="occcap${i}">0 / ${z.occMax}</div>
+    </div>`).join('');
+}
 
 function buildZoneSelectors() {
-  const selIds = ['selTemp','selRH','selCO2','selAirflow'];
-  const filterKeys = ['temp','rh','co2','airflow'];
-  selIds.forEach((id, idx) => {
+  const selConfigs = [
+    { id:'selTemp',    key:'temp'    },
+    { id:'selRH',      key:'rh'      },
+    { id:'selCO2',     key:'co2'     },
+    { id:'selAirflow', key:'airflow' },
+    { id:'selOcc',     key:'occ'     },
+  ];
+  selConfigs.forEach(({ id, key }) => {
     const sel = document.getElementById(id);
     if (!sel) return;
     sel.innerHTML = '<option value="all">All Zones</option>' +
-      ZONES.map((z,i) => `<option value="${i}" style="color:${z.color}">${z.name} — ${z.use}</option>`).join('');
+      ZONES.map((z, i) => `<option value="${i}" style="color:${z.color}">${z.name} — ${z.use}</option>`).join('');
     sel.addEventListener('change', () => {
-      chartFilter[filterKeys[idx]] = sel.value === 'all' ? 'all' : parseInt(sel.value);
+      chartFilter[key] = sel.value === 'all' ? 'all' : parseInt(sel.value);
     });
   });
 }
 
 /* ═══ CHART.JS ═══ */
-const chartOpts = {
-  responsive: true, maintainAspectRatio: false,
-  animation: false,
+const BASE_OPTS = {
+  responsive: true, maintainAspectRatio: false, animation: false,
   plugins: {
     legend: { labels: { color:'#8892a4', font:{family:'Inter',size:11}, boxWidth:10, padding:10, usePointStyle:true, pointStyle:'circle' } },
-    tooltip: { backgroundColor:'rgba(12,18,30,0.92)', titleColor:'#e4e8f1', bodyColor:'#8892a4', borderColor:'rgba(255,255,255,0.1)', borderWidth:1, cornerRadius:8, padding:10,
+    tooltip: { backgroundColor:'rgba(12,18,30,0.92)', titleColor:'#e4e8f1', bodyColor:'#8892a4',
+      borderColor:'rgba(255,255,255,0.1)', borderWidth:1, cornerRadius:8, padding:10,
       titleFont:{family:'Inter',weight:'600'}, bodyFont:{family:'JetBrains Mono',size:12} }
   },
   scales: {
-    x: { ticks:{color:'#5a6478', font:{family:'JetBrains Mono',size:9}, maxTicksLimit:10, maxRotation:0}, grid:{color:'rgba(255,255,255,0.04)'} },
-    y: { ticks:{color:'#5a6478', font:{family:'JetBrains Mono',size:10}}, grid:{color:'rgba(255,255,255,0.04)'} },
+    x: { ticks:{color:'#5a6478',font:{family:'JetBrains Mono',size:9},maxTicksLimit:10,maxRotation:0}, grid:{color:'rgba(255,255,255,0.04)'} },
+    y: { ticks:{color:'#5a6478',font:{family:'JetBrains Mono',size:10}}, grid:{color:'rgba(255,255,255,0.04)'} },
   }
 };
 
-let chartTemp, chartRH, chartCO2, chartAirflow;
+let chartTemp, chartRH, chartCO2, chartAirflow, chartOcc;
 
 function makeDS(dataArr) {
-  return ZONES.map((z,i) => ({
-    label:z.name, data:dataArr[i], borderColor:z.color, borderWidth:1.5,
-    pointRadius:0, tension:0.3, fill:false,
+  return ZONES.map((z, i) => ({
+    label: z.name, data: dataArr[i], borderColor: z.color,
+    borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: false,
   }));
 }
+
 function initCharts() {
   chartTemp = new Chart(document.getElementById('chartTemp').getContext('2d'), {
     type:'line', data:{ labels:[], datasets:makeDS(history.temp) },
-    options: { ...chartOpts, scales: { ...chartOpts.scales, y:{ ...chartOpts.scales.y, suggestedMin:16, suggestedMax:32 } },
-      plugins: { ...chartOpts.plugins, annotation: {} }
-    }
+    options: { ...BASE_OPTS, scales: { ...BASE_OPTS.scales, y:{...BASE_OPTS.scales.y, suggestedMin:16, suggestedMax:32} } }
   });
   chartRH = new Chart(document.getElementById('chartRH').getContext('2d'), {
     type:'line', data:{ labels:[], datasets:makeDS(history.rh) },
-    options: { ...chartOpts, scales: { ...chartOpts.scales, y:{ ...chartOpts.scales.y, suggestedMin:30, suggestedMax:90 } } }
+    options: { ...BASE_OPTS, scales: { ...BASE_OPTS.scales, y:{...BASE_OPTS.scales.y, suggestedMin:30, suggestedMax:90} } }
   });
   chartCO2 = new Chart(document.getElementById('chartCO2').getContext('2d'), {
     type:'line', data:{ labels:[], datasets:[
       ...makeDS(history.co2),
-      { label:'ASHRAE 1000', data:[], borderColor:'#f87171', borderWidth:2, borderDash:[8,4], pointRadius:0, fill:false }
+      { label:'ASHRAE 1000 ppm', data:[], borderColor:'#f87171', borderWidth:2, borderDash:[8,4], pointRadius:0, fill:false }
     ]},
-    options: { ...chartOpts, scales: { ...chartOpts.scales, y:{ ...chartOpts.scales.y, suggestedMin:350, suggestedMax:1200 } } }
+    options: { ...BASE_OPTS, scales: { ...BASE_OPTS.scales, y:{...BASE_OPTS.scales.y, suggestedMin:350, suggestedMax:1200} } }
   });
   chartAirflow = new Chart(document.getElementById('chartAirflow').getContext('2d'), {
     type:'line', data:{ labels:[], datasets:makeDS(history.mdot) },
-    options: { ...chartOpts, scales: { ...chartOpts.scales, y:{ ...chartOpts.scales.y, suggestedMin:0, suggestedMax:0.8, title:{display:true, text:'kg/s', color:'#5a6478', font:{family:'Inter',size:10}} } } }
+    options: { ...BASE_OPTS, scales: { ...BASE_OPTS.scales, y:{...BASE_OPTS.scales.y, suggestedMin:0, suggestedMax:0.8} } }
+  });
+  chartOcc = new Chart(document.getElementById('chartOcc').getContext('2d'), {
+    type:'line', data:{ labels:[], datasets:makeDS(history.occ) },
+    options: { ...BASE_OPTS, scales: { ...BASE_OPTS.scales, y:{...BASE_OPTS.scales.y, suggestedMin:0, suggestedMax:25,
+      title:{display:true, text:'People', color:'#5a6478', font:{family:'Inter',size:10}} } } }
   });
 }
 
@@ -705,8 +792,9 @@ function render() {
   // Clock
   const dt = row.datetime || '';
   const parts = dt.split(' ');
-  const md = (parts[0]||'').split('-');
-  const mo = parseInt(md[0])||1; const dy = parseInt(md[1])||1;
+  const md = (parts[0] || '').split('-');
+  const mo = parseInt(md[0]) || 1;
+  const dy = parseInt(md[1]) || 1;
   const tm = parts[1] || '00:00';
   document.getElementById('simClock').textContent = `${MONTH_NAMES[mo-1]} ${String(dy).padStart(2,'0')} — ${tm}`;
 
@@ -717,97 +805,142 @@ function render() {
 
   // Zone KPIs
   let co2Max = 0, totalMdot = 0;
-  ZONES.forEach((z,i) => {
+  ZONES.forEach((z, i) => {
     const k = z.key;
-    const T = row[k+'_T'], rh = row[k+'_rh'], co2 = row[k+'_co2'], mdot = row[k+'_mdot_cmd'];
-    document.getElementById('zt'+i).textContent = T != null ? T.toFixed(1) : '--';
-    document.getElementById('zrh'+i).textContent = rh != null ? rh.toFixed(0) : '--';
-    document.getElementById('zco2'+i).textContent = co2 != null ? co2.toFixed(0) : '--';
-    document.getElementById('zmf'+i).textContent = mdot != null ? mdot.toFixed(3) : '--';
+    const T    = row[k+'_T'];
+    const rh   = row[k+'_rh'];
+    const co2  = row[k+'_co2'];
+    const mdot = row[k+'_mdot_cmd'];
+    const occ  = row[k+'_occ'];
 
-    // Status
+    document.getElementById('zt'+i).textContent   = fmt(T, 1);
+    document.getElementById('zrh'+i).textContent  = fmt(rh, 0);
+    document.getElementById('zco2'+i).textContent = fmt(co2, 0);
+    document.getElementById('zmf'+i).textContent  = fmt(mdot, 3);
+
+    // Occupancy mini-bar in zone card
+    if (occ != null && !isNaN(occ)) {
+      const occPct = Math.min(100, (occ / z.occMax) * 100);
+      document.getElementById('zoccbar'+i).style.width = occPct + '%';
+      document.getElementById('zocctext'+i).textContent = `${occ.toFixed(1)} / ${z.occMax} people`;
+    }
+
+    // Status dot
     const dot = document.getElementById('zstatus'+i);
     dot.className = 'status-dot';
-    if ((T && T > z.coolSP + 2) || (co2 && co2 > 1000)) dot.classList.add('status-crit');
-    else if ((T && T > z.coolSP + 1) || (co2 && co2 > 800) || (rh && rh > 70)) dot.classList.add('status-warn');
+    const Tok = T != null && !isNaN(T);
+    const C2ok = co2 != null && !isNaN(co2);
+    const rhok = rh != null && !isNaN(rh);
+    if ((Tok && T > z.coolSP + 2) || (C2ok && co2 > 1000)) dot.classList.add('status-crit');
+    else if ((Tok && T > z.coolSP + 1) || (C2ok && co2 > 800) || (rhok && rh > 70)) dot.classList.add('status-warn');
     else dot.classList.add('status-ok');
 
-    if (co2 > co2Max) co2Max = co2;
-    totalMdot += (mdot || 0);
+    if (C2ok && co2 > co2Max) co2Max = co2;
+    totalMdot += (mdot && !isNaN(mdot)) ? mdot : 0;
+  });
+
+  // Occupancy bars section
+  ZONES.forEach((z, i) => {
+    const occ = row[z.key+'_occ'];
+    const el  = document.getElementById('occbar'+i);
+    const cap = document.getElementById('occcap'+i);
+    if (occ != null && !isNaN(occ)) {
+      const pctW = Math.min(100, (occ / z.occMax) * 100);
+      el.style.width = pctW + '%';
+      el.textContent = occ.toFixed(1);
+      cap.textContent = `${occ.toFixed(1)} / ${z.occMax}`;
+    }
   });
 
   // AHU
   const sat = row['AHU_SAT_cmd'];
-  const oa = row['AHU_OA_cmd'];
-  document.getElementById('ahuSATval').textContent = sat != null ? sat.toFixed(1) : '--';
-  document.getElementById('ahuSATgauge').style.width = sat != null ? ((sat - 8) / 12 * 100) + '%' : '0';
-  document.getElementById('ahuOAval').textContent = oa != null ? oa.toFixed(3) : '--';
-  const oaMax = totalMdot > 0 ? totalMdot : 1;
-  document.getElementById('ahuOAgauge').style.width = oa != null ? (oa / oaMax * 100) + '%' : '0';
+  const oa  = row['AHU_OA_cmd'];
+  document.getElementById('ahuSATval').textContent = fmt(sat, 1);
+  if (sat != null && !isNaN(sat))
+    document.getElementById('ahuSATgauge').style.width = Math.min(100, Math.max(0, (sat - 8) / 12 * 100)) + '%';
+  document.getElementById('ahuOAval').textContent = fmt(oa, 3);
+  if (oa != null && !isNaN(oa) && totalMdot > 0)
+    document.getElementById('ahuOAgauge').style.width = Math.min(100, oa / totalMdot * 100) + '%';
 
-  // OA Ratio (mixed)
-  const oaRatio = (totalMdot > 0 && oa != null) ? (oa / totalMdot * 100) : 0;
+  const oaRatio = (totalMdot > 0 && oa != null && !isNaN(oa)) ? (oa / totalMdot * 100) : 0;
   document.getElementById('ahuOARval').textContent = oaRatio.toFixed(1);
   document.getElementById('ahuOARgauge').style.width = Math.min(100, oaRatio) + '%';
-  const oarG = document.getElementById('ahuOARgauge');
-  oarG.style.background = oaRatio < 15 ? 'var(--red)' : oaRatio < 30 ? 'var(--amber)' : 'var(--green)';
+  document.getElementById('ahuOARgauge').style.background =
+    oaRatio < 15 ? 'var(--red)' : oaRatio < 30 ? 'var(--amber)' : 'var(--green)';
 
-  // Worst CO2
   document.getElementById('ahuCO2val').textContent = co2Max.toFixed(0);
   const co2Pct = Math.min(100, co2Max / 1200 * 100);
   const co2G = document.getElementById('ahuCO2gauge');
   co2G.style.width = co2Pct + '%';
   co2G.style.background = co2Max > 1000 ? 'var(--red)' : co2Max > 800 ? 'var(--amber)' : 'var(--green)';
 
-  // Charts — update every 3rd render for perf
+  // Charts — update every 3rd render for performance
   if (cursor % 3 === 0 || cursor >= csvData.length - 1) {
-    const lbl = [...history.labels];
-    chartTemp.data.labels = lbl;
-    chartRH.data.labels = lbl;
-    chartCO2.data.labels = lbl;
-    chartAirflow.data.labels = lbl;
+    // Slice history to the chosen time window
+    const winLen = Math.min(viewWindow, history.labels.length);
+    const lbl = history.labels.slice(-winLen);
 
-    // Apply zone filter: show only selected zone or all
     function applyFilter(chart, dataSource, filterKey, extraDS) {
       const sel = chartFilter[filterKey];
       for (let i = 0; i < 5; i++) {
         const visible = (sel === 'all' || sel === i);
-        chart.data.datasets[i].data = visible ? [...dataSource[i]] : [];
+        const sliced = dataSource[i].slice(-winLen);
+        chart.data.datasets[i].data   = visible ? sliced : [];
         chart.data.datasets[i].hidden = !visible;
       }
-      if (extraDS !== undefined) {
+      if (extraDS !== undefined && chart.data.datasets[5]) {
         chart.data.datasets[5].data = Array(lbl.length).fill(extraDS);
       }
     }
-    applyFilter(chartTemp, history.temp, 'temp');
-    applyFilter(chartRH, history.rh, 'rh');
-    applyFilter(chartCO2, history.co2, 'co2', 1000);
+
+    chartTemp.data.labels    = lbl;
+    chartRH.data.labels      = lbl;
+    chartCO2.data.labels     = lbl;
+    chartAirflow.data.labels = lbl;
+    chartOcc.data.labels     = lbl;
+
+    applyFilter(chartTemp,    history.temp, 'temp');
+    applyFilter(chartRH,      history.rh,   'rh');
+    applyFilter(chartCO2,     history.co2,  'co2', 1000);
     applyFilter(chartAirflow, history.mdot, 'airflow');
+    applyFilter(chartOcc,     history.occ,  'occ');
 
     chartTemp.update('none');
     chartRH.update('none');
     chartCO2.update('none');
     chartAirflow.update('none');
+    chartOcc.update('none');
   }
 
-  // Config table
+  // Config table (rebuilt each render for live current readings)
   const tbody = document.getElementById('configBody');
-  tbody.innerHTML = ZONES.map((z,i) => {
-    const k = z.key;
-    const T = row[k+'_T'], co2 = row[k+'_co2'], rh = row[k+'_rh'], mdot = row[k+'_mdot_cmd'];
+  tbody.innerHTML = ZONES.map((z, i) => {
+    const k    = z.key;
+    const T    = row[k+'_T'];
+    const co2  = row[k+'_co2'];
+    const rh   = row[k+'_rh'];
+    const mdot = row[k+'_mdot_cmd'];
+    const occ  = row[k+'_occ'];
+    const Tok  = T   != null && !isNaN(T);
+    const C2ok = co2 != null && !isNaN(co2);
     let sc = 'badge-ok', st = 'OK';
-    if ((T && T > z.coolSP + 2) || (co2 && co2 > 1000)) { sc='badge-crit'; st='CRITICAL'; }
-    else if ((T && T > z.coolSP + 1) || (co2 && co2 > 800)) { sc='badge-warn'; st='WARNING'; }
+    if ((Tok && T > z.coolSP + 2) || (C2ok && co2 > 1000)) { sc='badge-crit'; st='CRITICAL'; }
+    else if ((Tok && T > z.coolSP + 1) || (C2ok && co2 > 800))  { sc='badge-warn'; st='WARNING'; }
     return `<tr>
       <td><span class="zone-dot" style="background:${z.color}"></span>${z.name}</td>
-      <td>${z.use}</td><td class="mono-cell">PI + Anti-Windup</td><td class="mono-cell">EKF</td>
+      <td>${z.use}</td>
+      <td class="mono-cell">PI + Anti-Windup</td><td class="mono-cell">EKF</td>
       <td class="mono-cell">${z.coolSP}°C</td><td class="mono-cell">${z.heatSP}°C</td>
-      <td class="mono-cell">${z.rhTarget}%</td><td class="mono-cell">${z.kp}</td><td class="mono-cell">${z.ki}</td>
+      <td class="mono-cell">${z.rhTarget}%</td>
+      <td class="mono-cell">${z.kp}</td><td class="mono-cell">${z.ki}</td>
       <td class="mono-cell">${z.maxMdot.toFixed(2)} kg/s</td>
-      <td class="mono-cell">${T!=null?T.toFixed(1):'--'}°C</td>
-      <td class="mono-cell">${mdot!=null?mdot.toFixed(3):'--'} kg/s</td>
-      <td class="mono-cell">${co2!=null?co2.toFixed(0):'--'} ppm</td>
-      <td><span class="badge ${sc}">${st}</span></td></tr>`;
+      <td class="mono-cell">${z.occMin}</td><td class="mono-cell">${z.occMax}</td>
+      <td class="mono-cell">${fmt(T,1)}°C</td>
+      <td class="mono-cell">${fmt(mdot,3)} kg/s</td>
+      <td class="mono-cell">${fmt(co2,0)} ppm</td>
+      <td class="mono-cell">${fmt(occ,1)} ppl</td>
+      <td><span class="badge ${sc}">${st}</span></td>
+    </tr>`;
   }).join('');
 }
 </script>
