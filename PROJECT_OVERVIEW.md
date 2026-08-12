@@ -619,4 +619,4 @@ This enables the `-r` flag, which runs `ReadVarsESO` post-processing and generat
 
 ---
 
-*Generated from project source code — ME325 3YP, University of Moratuwa.*
+*Generated from project source code — ME325 3YP, University of Peradeniya.*
